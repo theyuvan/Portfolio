@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import TiltedCard from './tilted-card'
 
 export function MinimalHeroSection() {
   return (
@@ -30,23 +31,29 @@ export function MinimalHeroSection() {
 
             {/* Subtitle */}
             <p className="text-gray-400 text-base md:text-lg lg:text-xl font-light max-w-xl pt-4">
-              Developer | Blockchain Builder | AI Innovator
+              Developer | Blockchain Enthusiast
             </p>
           </motion.div>
 
           {/* Right - Profile Image */}
           <motion.div
-            className="relative w-full max-w-md mx-auto lg:mx-0"
+            className="relative w-full max-w-md mx-auto lg:mx-0 flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <motion.div
-              className="relative w-full aspect-square rounded-2xl overflow-hidden glass-effect"
-              whileHover={{ scale: 1.02 }}
+            <TiltedCard
+              containerWidth="540px"
+              containerHeight="540px"
+              imageWidth="540px"
+              imageHeight="540px"
+              rotateAmplitude={12}
+              scaleOnHover={1.05}
+              showMobileWarning={false}
+              showTooltip={false}
             >
               {/* Profile Image placeholder */}
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-white/20 flex items-center justify-center relative">
+              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-white/20 flex items-center justify-center relative rounded-2xl overflow-hidden glass-effect">
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-br from-white via-gray-300 to-gray-500"
                   animate={{ rotate: 360 }}
@@ -57,20 +64,20 @@ export function MinimalHeroSection() {
                   <div className="text-6xl font-bold neon-text mb-2">YR</div>
                   <p className="text-muted-foreground">Profile Image</p>
                 </div>
-              </div>
 
-              {/* Floating glow elements */}
-              <motion.div
-                className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl"
-                animate={{ y: [0, -30, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              />
-              <motion.div
-                className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"
-                animate={{ y: [0, 30, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-              />
-            </motion.div>
+                {/* Floating glow elements */}
+                <motion.div
+                  className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl"
+                  animate={{ y: [0, -30, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+                <motion.div
+                  className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"
+                  animate={{ y: [0, 30, 0] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+              </div>
+            </TiltedCard>
           </motion.div>
         </div>
       </div>
