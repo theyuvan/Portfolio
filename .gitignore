@@ -11,21 +11,15 @@ next.user-config.*
 # Environment variables
 .env*.local
 
-<<<<<<< HEAD
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
-=======
 # Common ignores
 node_modules/
 .next/
 .DS_Store
->>>>>>> 64064f6 (Configure Next.js project toolchain)
+
+# Local archive/source folders not part of deployment
+3D-Portfolio/
+3D-Portfolio-website/
+
+# Ignore markdown files except README
+*.md
+!README.md
