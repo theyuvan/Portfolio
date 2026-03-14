@@ -2,8 +2,23 @@
 
 import { motion } from 'framer-motion'
 import { ExternalLink, Github } from 'lucide-react'
+import Image from 'next/image'
+import ScrollStack, { ScrollStackItem } from './scroll-stack'
 
-const projects = [
+interface Project {
+  id: number
+  title: string
+  description: string
+  image: string
+  imageSrc?: string
+  technologies: string[]
+  links: {
+    github: string
+    live: string
+  }
+}
+
+const projects: Project[] = [
   {
     id: 1,
     title: 'DeFi Protocol V2',
@@ -73,25 +88,6 @@ const projects = [
 ]
 
 export function ProjectsSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8 },
-    },
-  }
-
   return (
     <section id="projects" className="py-24 px-6 relative overflow-hidden">
       {/* Background Elements */}
@@ -120,116 +116,96 @@ export function ProjectsSection() {
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+        {/* Projects ScrollStack */}
+        <ScrollStack
+          useWindowScroll
+          itemDistance={28}
+          itemScale={0.015}
+          itemStackDistance={18}
+          stackPosition="0px"
+          scaleEndPosition="8%"
+          baseScale={0.93}
+          rotationAmount={0}
+          blurAmount={0}
+          alignToFixedNavbar
+          navbarGapPx={38}
+          className="window-mode"
         >
           {projects.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={itemVariants}
-              className="group h-full"
-            >
-              <motion.div
-                className="relative h-full flex flex-col rounded-xl overflow-hidden glass-effect border border-primary/20 hover:border-primary/50 transition cursor-pointer"
-                whileHover={{ y: -10 }}
-              >
-                {/* Project Image */}
-                <div className="relative h-48 overflow-hidden bg-muted">
-                  <motion.div
-                    className="w-full h-full"
-                    style={{ background: project.image }}
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.4 }}
-                  />
-                  <motion.div
-                    className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition duration-300"
-                  />
+            <ScrollStackItem key={project.id}>
+              <div className="group w-full max-w-4xl mx-auto h-[clamp(24rem,58vh,34rem)] flex flex-col md:flex-row gap-0 glass-effect border border-primary/20 hover:border-primary/50 transition-colors cursor-pointer rounded-3xl overflow-hidden">
+                {/* Left – image panel (falls back to gradient until imageSrc is added) */}
+                <div className="relative md:w-[44%] h-[42%] md:h-full overflow-hidden shrink-0">
+                  {project.imageSrc ? (
+                    <Image
+                      src={project.imageSrc}
+                      alt={`${project.title} preview`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 44vw"
+                    />
+                  ) : (
+                    <div
+                      className="w-full h-full"
+                      style={{ background: project.image }}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300" />
 
-                  {/* Links Overlay */}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition duration-300"
-                  >
-                    <motion.a
+                  {/* Link buttons over the image */}
+                  <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <a
                       href={project.links.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 rounded-full bg-primary text-background hover:scale-110 transition"
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.9 }}
+                      className="p-3 rounded-full bg-primary text-background hover:scale-110 transition-transform"
                     >
-                      <Github size={20} />
-                    </motion.a>
-                    <motion.a
+                      <Github size={22} />
+                    </a>
+                    <a
                       href={project.links.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 rounded-full bg-primary text-background hover:scale-110 transition"
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.9 }}
+                      className="p-3 rounded-full bg-primary text-background hover:scale-110 transition-transform"
                     >
-                      <ExternalLink size={20} />
-                    </motion.a>
-                  </motion.div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 p-6 flex flex-col">
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition">
-                    {project.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-4 flex-1">
-                    {project.description}
-                  </p>
-
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech, i) => (
-                      <motion.span
-                        key={i}
-                        className="px-3 py-1 rounded-full text-xs bg-primary/10 text-primary border border-primary/20 hover:border-primary/50 transition"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {tech}
-                      </motion.span>
-                    ))}
+                      <ExternalLink size={22} />
+                    </a>
                   </div>
                 </div>
 
-                {/* Bottom Border Glow */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.4 }}
-                />
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
+                {/* Right – text content */}
+                <div className="flex-1 p-6 md:p-8 flex flex-col justify-between overflow-hidden">
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-xs text-primary font-semibold uppercase tracking-widest">
+                        Project {String(project.id).padStart(2, '0')}
+                      </span>
+                      <span className="h-px flex-1 bg-primary/20" />
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-3 group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
 
-        {/* View All Projects CTA */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <motion.a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3 border border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            View All Projects <ExternalLink size={18} />
-          </motion.a>
-        </motion.div>
+                  {/* Tech tags */}
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {project.technologies.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 rounded-full text-xs bg-primary/10 text-primary border border-primary/20"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </ScrollStackItem>
+          ))}
+        </ScrollStack>
       </div>
 
       {/* Background accent */}
