@@ -4,7 +4,6 @@ import { useState } from 'react'
 import {
   FolderKanban,
   Github,
-  Heart,
   Home,
   Instagram,
   Linkedin,
@@ -23,7 +22,6 @@ const menuItems = [
   { label: 'SKILLS', href: '#skills', icon: Sparkles },
   { label: 'PROJECTS', href: '#projects', icon: FolderKanban },
   { label: 'CONTACT', href: '#contact', icon: MailOpen },
-  { label: 'HOBBIES', href: '#hobbies', icon: Heart },
 ]
 
 const socialLinks = [
