@@ -1,87 +1,129 @@
-# Yuvan Raj - Developer Portfolio
+# Cinematic Developer Portfolio
 
-A modern, responsive portfolio website built with React and Vite, showcasing my projects, skills, and contact information. Designed for a seamless user experience and easy navigation, this portfolio highlights my expertise as a Full Stack and aspiring Web3 developer.
-
-![Screenshot 2025-06-29 222010](https://github.com/user-attachments/assets/bc044462-f052-4855-9878-86ea9d0035f6)
-![Screenshot 2025-06-29 222918](https://github.com/user-attachments/assets/ce9c6a49-6b51-43b2-8e7f-0f14a3e512b1)
-![Screenshot 2025-06-29 222945](https://github.com/user-attachments/assets/fc8d5683-8821-402d-a050-f60a22b0bec6)
-![Screenshot 2025-06-29 223010](https://github.com/user-attachments/assets/6f2cdd75-17aa-4348-b911-fb3168eef8b7)
-![Screenshot 2025-06-29 223043](https://github.com/user-attachments/assets/aca31442-857c-43c3-906f-0d83bf7ff08f)
-![Screenshot 2025-06-29 223114](https://github.com/user-attachments/assets/6e386601-2faf-413c-9921-1944cd0b6354)
-
+An award-winning developer portfolio featuring cinematic scroll animations and 3D UI effects. Built with Next.js 16, React 19, Framer Motion, Three.js, and GSAP.
 
 ## Features
 
-- Clean, responsive design for all devices
-- Animated navigation menu and smooth transitions
-- About section with tech stack highlights
-- Projects section with live demos and source code links
-- Contact form with Formspree integration
-- Social media links (LinkedIn, GitHub, Email)
-- Built with accessibility and performance in mind
+- **🎬 Cinematic Animations**: Smooth scroll animations powered by GSAP and Framer Motion
+- **🎨 3D Visual Effects**: Interactive 3D particle background using Three.js and React Three Fiber
+- **✨ Glassmorphism Design**: Modern glass card effects with neon green accent colors
+- **📱 Fully Responsive**: Mobile-optimized design with smooth performance
+- **⚡ Performance Optimized**: Lazy loading, dynamic imports, and efficient rendering
+- **🎯 Magnetic Interactions**: Interactive buttons that follow cursor movement
+- **🔄 Smooth Scrolling**: Lenis library for cinematic scroll experience
 
-## Technologies Used
+## Tech Stack
 
-- React 18+
-- Vite
-- Custom CSS3 (responsive)
-- JavaScript ES6+
-- Formspree (contact form)
-- Font Awesome (icons)
+- **Frontend Framework**: Next.js 16 + React 19
+- **Animation**: Framer Motion, GSAP
+- **3D Graphics**: Three.js, React Three Fiber
+- **Styling**: Tailwind CSS 4.2
+- **Smooth Scrolling**: Lenis
+- **Type Safety**: TypeScript 5.7
+
+## Project Structure
+
+```
+components/
+  ├── 3d/
+  │   └── AnimatedBackground.tsx    # 3D particle background
+  ├── ui/
+  │   ├── GlassCard.tsx             # Reusable glass card component
+  │   └── MagneticButton.tsx        # Interactive magnetic button
+  ├── providers/
+  │   └── ScrollProvider.tsx        # Lenis scroll provider
+  ├── sections/
+  │   ├── Hero.tsx                  # Hero section with 3D background
+  │   ├── About.tsx                 # About section with stats
+  │   ├── Experience.tsx            # Professional experience
+  │   ├── Projects.tsx              # Featured projects grid
+  │   ├── Skills.tsx                # Technical skills with progress bars
+  │   └── Contact.tsx               # Contact section with socials
+  ├── Navigation.tsx                # Fixed navigation with mobile menu
+  └── LoadingScreen.tsx             # Initial loading animation
+hooks/
+  ├── useGSAPScroll.ts             # GSAP scroll animation hook
+  ├── useIsMobile.ts               # Mobile detection hook
+app/
+  ├── layout.tsx                    # Root layout with providers
+  ├── page.tsx                      # Main portfolio page
+  └── globals.css                   # Global styles and design tokens
+```
+
+## Color Scheme
+
+- **Background**: `#0b0b0b` (Deep Black)
+- **Foreground**: `#f5f5f5` (Off White)
+- **Primary (Accent)**: `#7CFF00` (Neon Green)
+- **Secondary**: `#2a2a2a` (Dark Gray)
+- **Accent Colors**: Cyan (`#00d4ff`), Pink (`#ff006e`)
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js (version 16 or higher)
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
+1. **Install dependencies**:
    ```bash
-   git clone https://github.com/ryuvanraj/FUTURE_FS_01.git
-   cd FUTURE_FS_01
+   pnpm install
    ```
 
-2. **Install dependencies**
+2. **Run the development server**:
    ```bash
-   npm install
+   pnpm dev
    ```
 
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+3. **Open [http://localhost:3000](http://localhost:3000)** in your browser
 
-The application will be available at `https://yuvan-raj.netlify.app/` (or as indicated in your terminal).
+## Customization
 
-## Usage
+### Content
+- Edit section components in `components/sections/` to update content
+- Modify company names, project titles, and skills in the respective sections
+- Update contact links and social media URLs in `components/sections/Contact.tsx`
 
-- Browse the About section to learn more about me and my tech stack
-- Explore the Projects section for live demos and source code of my recent work
-- Use the Contact form or social links to get in touch
+### Styling
+- Edit design tokens in `app/globals.css` to change colors
+- Modify Tailwind configuration in `tailwind.config.ts`
+- Update animation timings in individual components
 
-## Contributing
+### Adding New Sections
+1. Create a new component in `components/sections/`
+2. Import and add it to `app/page.tsx`
+3. Use the same animation patterns for consistency
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## Performance Optimization
+
+- **3D Background**: Dynamically imported and only rendered on desktop
+- **Code Splitting**: Next.js automatic code splitting for sections
+- **Image Optimization**: Automatic image optimization by Next.js
+- **Bundle Optimization**: Three.js optimized in separate chunk
+
+## Browser Support
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## Development Tips
+
+- Use `useGSAPScroll` hook for scroll-triggered animations
+- Leverage `GlassCard` component for consistent card styling
+- Use `MagneticButton` for interactive button effects
+- Customize animations via Framer Motion variants
+
+## Deployment
+
+Deploy to Vercel with a single click:
+
+```bash
+vercel deploy
+```
+
+Or use GitHub integration for automatic deployments on push.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+MIT License - Feel free to use this portfolio template for your own projects.
 
-## Acknowledgments
+---
 
-- Inspiration from modern developer portfolios
-- Font Awesome for icons
-- Formspree for contact form handling
-
-## My Info
-
-E-Mail: [yuvan.r2005@gmail.com](mailto:yuvan.r2005@gmail.com)  
-
-GitHub: [ryuvanraj](https://github.com/ryuvanraj/)  
+Built with ❤️ using v0 + Vercel
