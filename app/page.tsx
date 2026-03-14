@@ -7,7 +7,6 @@ import { MinimalHeroSection } from '@/components/minimal-hero-section'
 import { ConstellationBackground } from '@/components/constellation-background'
 import { AboutSection } from '@/components/about-section'
 import { SkillsSection } from '@/components/skills-section'
-import { ExperienceSection } from '@/components/experience-section'
 import { ProjectsSection } from '@/components/projects-section'
 import { ContactSection } from '@/components/contact-section'
 import { Footer } from '@/components/footer'
@@ -19,12 +18,12 @@ export default function Home() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
+      smoothWheel: true,
+      wheelMultiplier: 1,
       touchMultiplier: 2,
+      syncTouch: true,
+      syncTouchLerp: 0.075,
+      lerp: 0.1,
       infinite: false,
     })
 
@@ -57,7 +56,6 @@ export default function Home() {
         <div className="relative bg-black">
           <AboutSection />
           <SkillsSection />
-          <ExperienceSection />
           <ProjectsSection />
           <ContactSection />
           <Footer />
