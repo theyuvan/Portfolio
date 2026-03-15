@@ -20,7 +20,7 @@ export function CanvasLoader() {
       <p
         style={{
           fontSize: 14,
-          color: '#7CFF00',
+          color: '#7e68ff',
           fontWeight: 800,
           marginTop: 40,
         }}
