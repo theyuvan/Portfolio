@@ -7,20 +7,20 @@
   --card-foreground: #ffffff;
   --popover: #0a0a0a;
   --popover-foreground: #ffffff;
-  --primary: #7CFF00;
-  --primary-foreground: #000000;
+  --primary: #7e68ff;
+  --primary-foreground: #ffffff;
   --secondary: #1a1a1a;
   --secondary-foreground: #e5e5e5;
   --muted: #2a2a2a;
   --muted-foreground: #a0a0a0;
-  --accent: #7CFF00;
-  --accent-foreground: #000000;
+  --accent: #7e68ff;
+  --accent-foreground: #ffffff;
   --destructive: #ff3333;
   --destructive-foreground: #ffffff;
   --border: #333333;
   --input: #0a0a0a;
-  --ring: #7CFF00;
-  --chart-1: #7CFF00;
+  --ring: #7e68ff;
+  --chart-1: #7e68ff;
   --chart-2: #cccccc;
   --chart-3: #999999;
   --chart-4: #666666;
@@ -28,14 +28,14 @@
   --radius: 0.625rem;
   --sidebar: #0a0a0a;
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #7CFF00;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #7CFF00;
-  --sidebar-accent-foreground: #000000;
+  --sidebar-primary: #7e68ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #7e68ff;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #333333;
-  --sidebar-ring: #7CFF00;
-  --glow: #7CFF00;
-  --glow-muted: rgba(124, 255, 0, 0.2);
+  --sidebar-ring: #7e68ff;
+  --glow: #7e68ff;
+  --glow-muted: rgba(126, 104, 255, 0.22);
 }
 
 .dark {
@@ -45,34 +45,34 @@
   --card-foreground: #ffffff;
   --popover: #0a0a0a;
   --popover-foreground: #ffffff;
-  --primary: #7CFF00;
-  --primary-foreground: #000000;
+  --primary: #7e68ff;
+  --primary-foreground: #ffffff;
   --secondary: #1a1a1a;
   --secondary-foreground: #e5e5e5;
   --muted: #2a2a2a;
   --muted-foreground: #a0a0a0;
-  --accent: #7CFF00;
-  --accent-foreground: #000000;
+  --accent: #7e68ff;
+  --accent-foreground: #ffffff;
   --destructive: #ff3333;
   --destructive-foreground: #ffffff;
   --border: #333333;
   --input: #0a0a0a;
-  --ring: #7CFF00;
-  --chart-1: #7CFF00;
+  --ring: #7e68ff;
+  --chart-1: #7e68ff;
   --chart-2: #cccccc;
   --chart-3: #999999;
   --chart-4: #666666;
   --chart-5: #444444;
   --sidebar: #0a0a0a;
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #7CFF00;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #7CFF00;
-  --sidebar-accent-foreground: #000000;
+  --sidebar-primary: #7e68ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #7e68ff;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #333333;
-  --sidebar-ring: #7CFF00;
-  --glow: #7CFF00;
-  --glow-muted: rgba(124, 255, 0, 0.2);
+  --sidebar-ring: #7e68ff;
+  --glow: #7e68ff;
+  --glow-muted: rgba(126, 104, 255, 0.22);
 }
 
 @theme inline {
@@ -327,13 +327,13 @@
   }
 
   .neon-text {
-    color: #7CFF00;
-    text-shadow: 0 0 10px rgba(124, 255, 0, 0.5), 0 0 20px rgba(124, 255, 0, 0.3);
+    color: #7e68ff;
+    text-shadow: 0 0 10px rgba(126, 104, 255, 0.5), 0 0 20px rgba(126, 104, 255, 0.3);
   }
 
   .neon-glow {
-    color: #7CFF00;
-    box-shadow: 0 0 10px rgba(124, 255, 0, 0.4), 0 0 20px rgba(124, 255, 0, 0.2);
+    color: #7e68ff;
+    box-shadow: 0 0 10px rgba(126, 104, 255, 0.4), 0 0 20px rgba(126, 104, 255, 0.2);
   }
 
   .magnetic-button {
@@ -349,8 +349,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 3px solid rgba(124, 255, 0, 0.2);
-    border-top-color: #7CFF00;
+    border: 3px solid rgba(126, 104, 255, 0.2);
+    border-top-color: #7e68ff;
     animation: canvas-loader-rotate 1s linear infinite;
   }
 }
