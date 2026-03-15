@@ -66,7 +66,7 @@ export function HeroSection() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
               >
-                <span className="text-[#7CFF00] block">Yuvan</span>
+                <span className="text-primary block">Yuvan</span>
                 <span className="text-white block">Raj</span>
               </motion.h1>
             </div>
@@ -90,7 +90,7 @@ export function HeroSection() {
             >
               <a
                 href="#projects"
-                className="px-8 py-3 bg-[#7CFF00] text-black rounded-lg font-semibold hover:bg-[#6eeb00] transition-all duration-300 shadow-lg shadow-[#7CFF00]/20"
+                className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-primary/20"
               >
                 View Projects
               </a>
@@ -117,18 +117,18 @@ export function HeroSection() {
                 {/* Profile Image Placeholder */}
                 <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-8xl font-bold text-[#7CFF00] mb-4">YR</div>
+                    <div className="text-8xl font-bold text-primary mb-4">YR</div>
                     <p className="text-gray-400 text-sm">Profile Image</p>
                   </div>
                 </div>
 
                 {/* Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#7CFF00]/10 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent pointer-events-none" />
               </div>
 
               {/* Floating Elements */}
               <motion.div
-                className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-[#7CFF00]/10 blur-2xl"
+                className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-primary/10 blur-2xl"
                 animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
                 transition={{ duration: 4, repeat: Infinity }}
               />
