@@ -9,7 +9,6 @@ import { AboutSection } from '@/components/about-section'
 import { SkillsSection } from '@/components/skills-section'
 import { ProjectsSection } from '@/components/projects-section'
 import { ContactSection } from '@/components/contact-section'
-import { Footer } from '@/components/footer'
 import Lenis from 'lenis'
 
 export default function Home() {
@@ -56,9 +55,12 @@ export default function Home() {
         <div className="relative bg-black">
           <AboutSection />
           <SkillsSection />
-          <ProjectsSection />
-          <ContactSection />
-          <Footer />
+          <div className="mb-[3cm]">
+            <ProjectsSection />
+          </div>
+          <div className="mt-[3cm]">
+            <ContactSection />
+          </div>
         </div>
       </main>
     </>
