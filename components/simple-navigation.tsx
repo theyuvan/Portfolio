@@ -61,13 +61,13 @@ export function SimpleNavigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-5 sm:px-8 lg:px-12 py-5 sm:py-8">
         <div className="max-w-[1800px] mx-auto flex items-center justify-between rounded-full border border-white/10 bg-black/40 px-5 sm:px-8 py-3 sm:py-4 backdrop-blur-xl">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#7CFF00]"></span>
+            <span className="w-2 h-2 rounded-full bg-primary"></span>
             <span className="text-gray-300 text-xs sm:text-sm font-light hidden sm:inline">Chennai, India</span>
           </div>
 
           <a href="#home" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#7CFF00] flex items-center justify-center">
-              <span className="text-black font-bold text-lg sm:text-xl">Y</span>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center">
+              <span className="text-white font-bold text-lg sm:text-xl">Y</span>
             </div>
             <span className="text-white text-base sm:text-xl font-semibold hidden sm:inline">Yuvan Raj</span>
           </a>
