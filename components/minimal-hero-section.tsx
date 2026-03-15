@@ -24,7 +24,7 @@ export function MinimalHeroSection() {
             {/* Large Name - Much Bigger */}
             <div className="space-y-2">
               <h1 className="font-bold leading-[0.85] tracking-tight">
-                <span className="block text-[#7CFF00] text-[10vw] lg:text-[8rem] xl:text-[10rem]">Yuvan</span>
+                <span className="block text-primary text-[10vw] lg:text-[8rem] xl:text-[10rem]">Yuvan</span>
                 <span className="block text-white text-[10vw] lg:text-[8rem] xl:text-[10rem]">Raj</span>
               </h1>
             </div>
