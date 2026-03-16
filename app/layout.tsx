@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next'
-import { Poppins } from 'next/font/google'
+import { Sora } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
-const poppins = Poppins({
-  weight: ['300', '400', '500', '600', '700', '800'],
+const sora = Sora({
+  weight: ['300', '400', '500', '600', '700'],
   subsets: ["latin"],
-  variable: '--font-poppins'
+  variable: '--font-sora'
 });
 
 export const metadata: Metadata = {
@@ -53,7 +53,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className={`${poppins.variable} font-sans antialiased dark`}>
+      <body className={`${sora.variable} font-sans antialiased dark`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
