@@ -51,29 +51,60 @@ export function SkillsSection() {
           </p>
         </motion.div>
 
-        {/* Skills Grid with 3D Balls */}
+        {/* Skills Pyramid with 3D Balls */}
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 justify-items-center gap-x-6 gap-y-8"
-          variants={containerVariants}
+          className="flex flex-col items-center gap-y-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {technologies.map((technology, index) => {
-            const remainder = technologies.length % 6
-            const firstItemInLastRow = index === technologies.length - remainder
-            const centerLastRowOffset = remainder === 4 && firstItemInLastRow ? 'lg:col-start-2' : ''
-
-            return (
+          {/* Row 1: 6 skills */}
+          <motion.div
+            className="flex gap-x-6 justify-center flex-wrap"
+            variants={containerVariants}
+          >
+            {technologies.slice(0, 6).map((technology) => (
               <motion.div
                 key={technology.name}
                 variants={itemVariants}
-                className={`w-32 h-32 ${centerLastRowOffset}`}
+                className="w-32 h-32"
               >
                 <BallCanvas icon={technology.icon} />
               </motion.div>
-            )
-          })}
+            ))}
+          </motion.div>
+
+          {/* Row 2: 5 skills */}
+          <motion.div
+            className="flex gap-x-6 justify-center flex-wrap"
+            variants={containerVariants}
+          >
+            {technologies.slice(6, 11).map((technology) => (
+              <motion.div
+                key={technology.name}
+                variants={itemVariants}
+                className="w-32 h-32"
+              >
+                <BallCanvas icon={technology.icon} />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Row 3: Remaining skills */}
+          <motion.div
+            className="flex gap-x-6 justify-center flex-wrap"
+            variants={containerVariants}
+          >
+            {technologies.slice(11).map((technology) => (
+              <motion.div
+                key={technology.name}
+                variants={itemVariants}
+                className="w-32 h-32"
+              >
+                <BallCanvas icon={technology.icon} />
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
 
         {/* Background accent */}
