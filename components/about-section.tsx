@@ -1,13 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import BounceCards from './bounce-cards'
+import { fetchAboutInfo, getPublicImageUrl } from '@/app/actions/portfolio'
 
-const aboutImages = [
-  'https://picsum.photos/560/560?grayscale&random=21',
-  'https://picsum.photos/520/520?grayscale&random=22',
-  'https://picsum.photos/500/500?grayscale&random=23',
-]
+interface AboutInfo {
+  bio_paragraph_1: string
+  bio_paragraph_2: string
+  experience_years: string
+  projects_count: string
+  images: string[]
+}
 
 const transformStyles = [
   'rotate(7deg) translate(-140px)',
@@ -16,6 +20,67 @@ const transformStyles = [
 ]
 
 export function AboutSection() {
+  const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null)
+  const [aboutImages, setAboutImages] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadAboutInfo = async () => {
+      try {
+        setIsLoading(true)
+        const data = await fetchAboutInfo()
+        if (data) {
+          setAboutInfo(data)
+          // Get public URLs for images from Supabase Storage
+          if (data.images && Array.isArray(data.images)) {
+            const imageUrls = await Promise.all(
+              data.images.map((imagePath) => getPublicImageUrl(imagePath))
+            )
+            setAboutImages(imageUrls)
+          } else {
+            // Fallback to placeholder images if no images provided
+            setAboutImages([
+              'https://picsum.photos/560/560?grayscale&random=21',
+              'https://picsum.photos/520/520?grayscale&random=22',
+              'https://picsum.photos/500/500?grayscale&random=23',
+            ])
+          }
+        } else {
+          setError('Failed to load about information')
+        }
+      } catch (err) {
+        console.error('Error loading about info:', err)
+        setError('Failed to load about information')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadAboutInfo()
+  }, [])
+
+  // Default values for fallback
+  const defaultAboutInfo: AboutInfo = {
+    bio_paragraph_1:
+      "I'm a full-stack developer passionate about creating innovative solutions in blockchain, web3, and artificial intelligence. With expertise in React, Next.js, and smart contract development, I bridge the gap between creative design and robust functionality.",
+    bio_paragraph_2:
+      "When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.",
+    experience_years: '3+',
+    projects_count: '20+',
+    images: [],
+  }
+
+  const displayAboutInfo = aboutInfo || defaultAboutInfo
+  const displayImages =
+    aboutImages.length > 0
+      ? aboutImages
+      : [
+          'https://picsum.photos/560/560?grayscale&random=21',
+          'https://picsum.photos/520/520?grayscale&random=22',
+          'https://picsum.photos/500/500?grayscale&random=23',
+        ]
+
   return (
     <section id="about" className="py-24 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto">
@@ -45,17 +110,23 @@ export function AboutSection() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <BounceCards
-              className="w-full max-w-[640px]"
-              images={aboutImages}
-              containerWidth={640}
-              containerHeight={380}
-              animationDelay={1.5}
-              animationStagger={0.15}
-              easeType="elastic.out(1, 0.5)"
-              transformStyles={transformStyles}
-              enableHover
-            />
+            {isLoading ? (
+              <div className="w-full max-w-[640px] h-[380px] flex items-center justify-center text-muted-foreground">
+                Loading...
+              </div>
+            ) : (
+              <BounceCards
+                className="w-full max-w-[640px]"
+                images={displayImages}
+                containerWidth={640}
+                containerHeight={380}
+                animationDelay={1.5}
+                animationStagger={0.15}
+                easeType="elastic.out(1, 0.5)"
+                transformStyles={transformStyles}
+                enableHover
+              />
+            )}
           </motion.div>
 
           {/* Right: existing text content */}
@@ -69,7 +140,7 @@ export function AboutSection() {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                I&apos;m a full-stack developer passionate about creating innovative solutions in blockchain, web3, and artificial intelligence. With expertise in React, Next.js, and smart contract development, I bridge the gap between creative design and robust functionality.
+                {displayAboutInfo.bio_paragraph_1}
               </motion.p>
               <motion.p
                 className="text-gray-400 text-lg leading-relaxed"
@@ -78,9 +149,24 @@ export function AboutSection() {
                 transition={{ duration: 0.8, delay: 0.15 }}
                 viewport={{ once: true }}
               >
-                When I&apos;m not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.
+                {displayAboutInfo.bio_paragraph_2}
               </motion.p>
             </div>
+
+            {/* Slogan */}
+            <motion.div
+              className="mb-10 py-6 border-l-4 border-primary pl-6"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-lg md:text-xl font-semibold text-primary italic">
+                "Surpass your limits. Right here, right now!"
+                        
+              </p>
+              <p className="text-sm text-gray-500 mt-2 text-right">— Yami Sukehiro</p>
+            </motion.div>
 
             <motion.div
               className="flex flex-wrap gap-4 mb-10"
@@ -90,8 +176,8 @@ export function AboutSection() {
               viewport={{ once: true }}
             >
               {[
-                { value: '3+', label: 'Experience' },
-                { value: '20+', label: 'Projects' },
+                { value: displayAboutInfo.experience_years, label: 'Experience' },
+                { value: displayAboutInfo.projects_count, label: 'Projects' },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -106,25 +192,12 @@ export function AboutSection() {
                   <span className="text-sm text-gray-400">{stat.label}</span>
                 </motion.div>
               ))}
+
+              
             </motion.div>
 
             {/* CTA */}
-            <motion.div
-              className="mt-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <motion.a
-                href="#contact"
-                className="inline-block px-8 py-3 border border-primary text-primary rounded-lg font-semibold hover:bg-primary/10 transition"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Let&apos;s Connect
-              </motion.a>
-            </motion.div>
+            
           </div>
         </div>
       </div>
