@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ContactEarthCanvas } from './contact-earth-canvas'
 import { ContactStarsCanvas } from './contact-stars-canvas'
+import { submitContactForm } from '@/app/actions/portfolio'
 
 export function ContactSection() {
   const isMobile = useIsMobile()
@@ -16,6 +17,8 @@ export function ContactSection() {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitMessage, setSubmitMessage] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -26,16 +29,34 @@ export function ContactSection() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate form submission for now.
-    setTimeout(() => {
-      alert("Thank you for your message. I'll get back to you soon.")
-      setFormData({ name: '', email: '', message: '' })
+    try {
+      const result = await submitContactForm(
+        formData.name,
+        formData.email,
+        formData.message
+      )
+
+      if (result.success) {
+        setSubmitStatus('success')
+        setSubmitMessage("Thank you for your message. I'll get back to you soon.")
+        setFormData({ name: '', email: '', message: '' })
+        // Reset success message after 5 seconds
+        setTimeout(() => setSubmitStatus('idle'), 5000)
+      } else {
+        setSubmitStatus('error')
+        setSubmitMessage(result.error || 'Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitStatus('error')
+      setSubmitMessage('Failed to send message. Please try again.')
+    } finally {
       setIsSubmitting(false)
-    }, 1000)
+    }
   }
 
   return (
-    <section id="contact" className="py-24 px-6 relative overflow-hidden bg-black">
+    <section id="contact" className="py-20 px-6 relative overflow-hidden bg-black">
       <ContactStarsCanvas />
 
       <div className='absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(40,46,96,0.12)_0%,rgba(2,2,5,0.72)_55%,rgba(0,0,0,0.94)_100%)]' />
@@ -47,23 +68,24 @@ export function ContactSection() {
         style={{ marginRight: '-180px', marginTop: '-180px' }}
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="flex flex-col-reverse lg:flex-row items-stretch gap-10 lg:gap-12">
+      <div className="relative z-10 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col-reverse lg:flex-row items-stretch justify-between gap-8 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full lg:w-[44%] glass-effect border border-primary/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-8"
+            className="w-full lg:w-[48%] glass-effect border border-primary/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-6"
           >
             <p className="text-sm uppercase tracking-[0.2em] text-gray-300/80 mb-2">Get in touch</p>
-            <h3 className="text-5xl md:text-6xl font-bold mb-8 text-white">
+            <h3 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               Contact<span className="text-primary">.</span>
             </h3>
 
             <form
             onSubmit={handleSubmit}
-            className="mt-6 flex flex-col gap-6"
+            className="mt-6 flex flex-col gap-4"
           >
             <label className="flex flex-col">
               <span className="text-white font-semibold text-3d mb-3">
@@ -75,8 +97,9 @@ export function ContactSection() {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                disabled={isSubmitting}
                 placeholder="What is your good name?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition"
+                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -88,8 +111,9 @@ export function ContactSection() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                disabled={isSubmitting}
                 placeholder="What is your email address?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition"
+                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -101,10 +125,23 @@ export function ContactSection() {
                 value={formData.message}
                 onChange={handleChange}
                 required
+                disabled={isSubmitting}
                 placeholder="What do you want to say?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white resize-none transition"
+                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white resize-none transition disabled:opacity-50"
               />
             </label>
+
+            {submitStatus === 'success' && (
+              <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400">
+                {submitMessage}
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400">
+                {submitMessage}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -121,10 +158,11 @@ export function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full lg:w-[56%] h-[430px] md:h-[560px]"
+            className="w-full lg:w-[50%] h-[430px] md:h-[560px]"
           >
             <ContactEarthCanvas isMobile={isMobile} />
           </motion.div>
+        </div>
         </div>
       </div>
     </section>
