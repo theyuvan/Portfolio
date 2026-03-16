@@ -2,13 +2,33 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import TiltedCard from './tilted-card'
+import { fetchHeroImage } from '@/app/actions/portfolio'
 
 export function MinimalHeroSection() {
+  const [heroImageUrl, setHeroImageUrl] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadHeroImage = async () => {
+      try {
+        setIsLoading(true)
+        const imageUrl = await fetchHeroImage()
+        setHeroImageUrl(imageUrl)
+      } catch (error) {
+        console.error('Error loading hero image:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadHeroImage()
+  }, [])
   return (
     <section className="min-h-screen flex items-center justify-center px-8 lg:px-12 pt-24 bg-transparent">
       <div className="max-w-[1800px] mx-auto w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center ml-[2cm]">
           {/* Left - Text Content */}
           <motion.div
             className="space-y-8"
@@ -37,7 +57,7 @@ export function MinimalHeroSection() {
 
           {/* Right - Profile Image */}
           <motion.div
-            className="relative w-full max-w-md mx-auto lg:mx-0 flex justify-center lg:justify-end"
+            className="relative w-full max-w-md mx-auto lg:mx-0 lg:ml-[2cm] flex justify-center lg:justify-end"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -52,31 +72,48 @@ export function MinimalHeroSection() {
               showMobileWarning={false}
               showTooltip={false}
             >
-              {/* Profile Image placeholder */}
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-white/20 flex items-center justify-center relative rounded-2xl overflow-hidden glass-effect">
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-white via-gray-300 to-gray-500"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                  style={{ opacity: 0.1 }}
-                />
-                <div className="relative z-10 text-center">
-                  <div className="text-6xl font-bold neon-text mb-2">YR</div>
-                  <p className="text-muted-foreground">Profile Image</p>
+              {/* Profile Image placeholder or actual image */}
+              {isLoading ? (
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-white/20 flex items-center justify-center relative rounded-2xl overflow-hidden glass-effect">
+                  <div className="relative z-10 text-center">
+                    <div className="text-6xl font-bold neon-text mb-2">YR</div>
+                    <p className="text-muted-foreground">Loading...</p>
+                  </div>
                 </div>
+              ) : heroImageUrl ? (
+                <Image
+                  src={heroImageUrl}
+                  alt="Profile"
+                  fill
+                  className="w-full h-full object-cover rounded-2xl"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-white/20 flex items-center justify-center relative rounded-2xl overflow-hidden glass-effect">
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-white via-gray-300 to-gray-500"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                    style={{ opacity: 0.1 }}
+                  />
+                  <div className="relative z-10 text-center">
+                    <div className="text-6xl font-bold neon-text mb-2">YR</div>
+                    <p className="text-muted-foreground">Profile Image</p>
+                  </div>
 
-                {/* Floating glow elements */}
-                <motion.div
-                  className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl"
-                  animate={{ y: [0, -30, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                />
-                <motion.div
-                  className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"
-                  animate={{ y: [0, 30, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                />
-              </div>
+                  {/* Floating glow elements */}
+                  <motion.div
+                    className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-2xl"
+                    animate={{ y: [0, -30, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  />
+                  <motion.div
+                    className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"
+                    animate={{ y: [0, 30, 0] }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                  />
+                </div>
+              )}
             </TiltedCard>
           </motion.div>
         </div>
