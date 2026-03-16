@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Decal, Float, OrbitControls, Preload, useTexture } from '@react-three/drei'
 import { CanvasLoader } from './canvas-loader'
@@ -39,17 +39,34 @@ function Ball({ imgUrl }: BallProps) {
 
 interface BallCanvasProps {
   icon: string
+  index: number
 }
 
-export function BallCanvas({ icon }: BallCanvasProps) {
+export function BallCanvas({ icon, index }: BallCanvasProps) {
+  const [shouldRender, setShouldRender] = useState(false)
+
+  useEffect(() => {
+    // Stagger initialization to avoid hitting WebGL context limit
+    const delay = index * 100 // 100ms between each canvas
+    const timer = setTimeout(() => {
+      setShouldRender(true)
+    }, delay)
+
+    return () => clearTimeout(timer)
+  }, [index])
+
+  if (!shouldRender) {
+    return null
+  }
+
   return (
     <Canvas
-      frameloop='always'
-      dpr={[1, 1]}
-      gl={{ preserveDrawingBuffer: false, antialias: false, powerPreference: 'low-power' }}
+      frameloop='demand'
+      dpr={[1, 2]}
+      gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls enableZoom={false} enablePan={false} rotateSpeed={0.8} />
+        <OrbitControls enableZoom={false} />
         <Ball imgUrl={icon} />
       </Suspense>
       <Preload all />

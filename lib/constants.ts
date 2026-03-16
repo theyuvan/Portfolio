@@ -24,16 +24,8 @@ export const technologies = [
     icon: "/tech/Node.png",
   },
   {
-    name: "Express",
-    icon: "/tech/express.png",
-  },
-  {
     name: "Python",
     icon: "/tech/Python.png",
-  },
-  {
-    name: "Java",
-    icon: "/tech/java.png",
   },
   {
     name: "Tailwind CSS",
