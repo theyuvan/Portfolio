@@ -52,8 +52,8 @@ const STATES = {
       rotation: { x: 0, y: Math.PI / 12, z: 0 },
     },
     mobile: {
-      scale: { x: 0.24, y: 0.24, z: 0.24 },
-      position: { x: 0, y: 0, z: 0 },
+      scale: { x: 0.22, y: 0.22, z: 0.22 },
+      position: { x: 0, y: -6, z: 0 },
       rotation: { x: 0, y: Math.PI / 6, z: 0 },
     },
   },
@@ -138,8 +138,8 @@ export function SkillsSection() {
   useEffect(() => {
     if (!selectedSkill || !splineApp) return
     if (isPhone) {
-      splineApp.setVariable('heading', '')
-      splineApp.setVariable('desc', selectedSkill.label)
+      splineApp.setVariable('heading', selectedSkill.label)
+      splineApp.setVariable('desc', '')
     } else {
       splineApp.setVariable('heading', selectedSkill.label)
       splineApp.setVariable('desc', selectedSkill.shortDescription)
@@ -239,8 +239,8 @@ export function SkillsSection() {
       const skill = SKILLS[e.target.name as keyof typeof SKILLS]
       if (skill) setSelectedSkill(skill)
       if (isPhone) {
-        splineApp.setVariable('heading', '')
-        splineApp.setVariable('desc', skill?.label || '')
+        splineApp.setVariable('heading', skill?.label || '')
+        splineApp.setVariable('desc', '')
       } else {
         splineApp.setVariable('heading', skill?.label || '')
         splineApp.setVariable('desc', skill?.shortDescription || '')
