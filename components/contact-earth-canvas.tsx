@@ -10,11 +10,16 @@ interface EarthProps {
   isMobile: boolean
 }
 
-function EarthModel({ earthRef }: { earthRef: React.RefObject<any> }) {
+function EarthModel({ earthRef, isMobile }: { earthRef: React.RefObject<any>; isMobile: boolean }) {
   const { nodes, materials } = useGLTF('/models/planet/scene.gltf') as any
 
   return (
-    <group dispose={null} scale={3.0} position={[0, -0.28, 0]} ref={earthRef}>
+    <group
+      dispose={null}
+      scale={isMobile ? 2.2 : 3.0}
+      position={isMobile ? [0, -0.08, 0] : [0, -0.28, 0]}
+      ref={earthRef}
+    >
       <group name='Sketchfab_Scene'>
         <group name='Sketchfab_model' rotation={[-1.54, -0.064, 0]}>
           <group name='root'>
@@ -66,7 +71,7 @@ function Earth({ isMobile }: EarthProps) {
           makeDefault
         />
       )}
-      <EarthModel earthRef={earthRef} />
+      <EarthModel earthRef={earthRef} isMobile={isMobile} />
     </>
   )
 }
@@ -76,6 +81,10 @@ interface ContactEarthCanvasProps {
 }
 
 export function ContactEarthCanvas({ isMobile = false }: ContactEarthCanvasProps) {
+  const cameraSettings = isMobile
+    ? { position: [0, 0.1, 8.5] as [number, number, number], fov: 43 }
+    : { position: [0, 0, 6.4] as [number, number, number], fov: 52 }
+
   return (
     <Canvas
       dpr={[1, 2]}
@@ -84,7 +93,7 @@ export function ContactEarthCanvas({ isMobile = false }: ContactEarthCanvasProps
         alpha: true,
         antialias: true,
       }}
-      camera={{ position: [0, 0, 6.4], fov: 52 }}
+      camera={cameraSettings}
       className='cursor-grab active:cursor-grabbing'
     >
       <Suspense fallback={<CanvasLoader />}>

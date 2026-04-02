@@ -1,14 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ContactEarthCanvas } from './contact-earth-canvas'
 import { ContactStarsCanvas } from './contact-stars-canvas'
 import { submitContactForm } from '@/app/actions/portfolio'
+import soundEffects from '@/lib/sound-effects'
 
 export function ContactSection() {
   const isMobile = useIsMobile()
+  const formRef = useRef<HTMLFormElement>(null)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -19,6 +21,26 @@ export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
+
+  // Mute sound effects when form is in focus
+  useEffect(() => {
+    const handleFocus = () => {
+      soundEffects.mute()
+    }
+    const handleBlur = () => {
+      soundEffects.unmute()
+    }
+
+    const form = formRef.current
+    if (form) {
+      form.addEventListener('focusin', handleFocus)
+      form.addEventListener('focusout', handleBlur)
+      return () => {
+        form.removeEventListener('focusin', handleFocus)
+        form.removeEventListener('focusout', handleBlur)
+      }
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -56,7 +78,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-20 px-6 relative overflow-hidden bg-black">
+    <section id="contact" className="py-16 sm:py-20 px-4 sm:px-6 relative overflow-hidden bg-black">
       <ContactStarsCanvas />
 
       <div className='absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(40,46,96,0.12)_0%,rgba(2,2,5,0.72)_55%,rgba(0,0,0,0.94)_100%)]' />
@@ -68,22 +90,23 @@ export function ContactSection() {
         style={{ marginRight: '-180px', marginTop: '-180px' }}
       />
 
-      <div className="relative z-10 px-6">
+      <div className="relative z-10 px-0 sm:px-3 lg:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col-reverse lg:flex-row items-stretch justify-between gap-8 lg:gap-12">
+          <div className="flex flex-col lg:flex-row items-stretch justify-between gap-8 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full lg:w-[48%] glass-effect border border-primary/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-6"
+            className="order-1 w-full lg:w-[48%] glass-effect border border-primary/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-5 sm:p-6"
           >
             <p className="text-sm uppercase tracking-[0.2em] text-gray-300/80 mb-2">Get in touch</p>
-            <h3 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
               Contact<span className="text-primary">.</span>
             </h3>
 
             <form
+            ref={formRef}
             onSubmit={handleSubmit}
             className="mt-6 flex flex-col gap-4"
           >
@@ -99,7 +122,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What is your good name?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -113,7 +136,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What is your email address?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -127,7 +150,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What do you want to say?"
-                className="bg-black/35 py-4 px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white resize-none transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white resize-none transition disabled:opacity-50"
               />
             </label>
 
@@ -146,7 +169,7 @@ export function ContactSection() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-primary py-3 px-8 rounded-xl w-fit text-primary-foreground font-bold disabled:opacity-50"
+              className="bg-primary py-3 px-8 rounded-xl w-full sm:w-fit text-primary-foreground font-bold disabled:opacity-50"
             >
               {isSubmitting ? 'Sending...' : 'Send'}
             </button>
@@ -158,7 +181,7 @@ export function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="w-full lg:w-[50%] h-[430px] md:h-[560px]"
+            className="order-2 w-full lg:w-[50%] h-[320px] sm:h-[420px] md:h-[560px]"
           >
             <ContactEarthCanvas isMobile={isMobile} />
           </motion.div>
