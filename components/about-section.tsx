@@ -103,7 +103,7 @@ export function AboutSection() {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            About <span className="neon-text">Me</span>
+            About <span className="text-[#7E68FF]">Me</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             A passionate developer with a mission to build the future

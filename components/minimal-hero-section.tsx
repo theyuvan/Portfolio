@@ -44,7 +44,7 @@ export function MinimalHeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             {/* Small Text */}
-            <p className="text-gray-400 text-sm sm:text-base md:text-sm uppercase tracking-[0.24em] sm:tracking-[0.34em] font-light">
+            <p className="kicker-font text-white text-sm sm:text-base md:text-sm">
               Hello My Name Is
             </p>
 
