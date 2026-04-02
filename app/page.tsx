@@ -46,7 +46,7 @@ export default function Home() {
         <SimpleNavigation />
 
         {/* Landing only: constellation background */}
-        <section className="relative min-h-screen overflow-hidden">
+        <section className="relative min-h-screen overflow-hidden mb-[4cm]">
           <ConstellationBackground>
             <MinimalHeroSection />
           </ConstellationBackground>
@@ -54,15 +54,15 @@ export default function Home() {
 
         {/* Remaining sections */}
         <div className="relative bg-black">
-          <div className="mb-[5cm]">
+          <div className="mb-[3cm]">
             <AboutSection />
           </div>
 
-          <div className="mb-[5cm]">
+          <div className="mb-[4cm]">
             <SkillsSection />
           </div>
 
-          <div className="mb-[5cm]">
+          <div className="mb-[4cm]">
             <ProjectsSection />
           </div>
 

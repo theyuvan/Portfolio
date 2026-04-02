@@ -39,7 +39,7 @@ export function ScrollToTopButton() {
         <motion.button
           type="button"
           aria-label="Scroll to top"
-          className="fixed right-4 sm:right-6 bottom-6 sm:bottom-8 z-[90] w-16 h-16 rounded-2xl border border-white/35 bg-primary text-white cursor-pointer hover:scale-105 transition-transform"
+          className="fixed right-4 sm:right-6 bottom-6 sm:bottom-8 z-[90] w-15 h-15 rounded-2xl border border-white/35 bg-primary text-white cursor-pointer hover:scale-105 transition-transform"
           initial={{ opacity: 0, y: 12, scale: 0.92 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.92 }}
