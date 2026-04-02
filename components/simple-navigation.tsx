@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import {
+  Download,
   FolderKanban,
   Github,
   Home,
-  Instagram,
   Linkedin,
+  Mail,
   MailOpen,
   Menu,
   Sparkles,
-  Twitter,
   User,
   X,
 } from 'lucide-react'
@@ -25,10 +25,10 @@ const menuItems = [
 ]
 
 const socialLinks = [
-  { label: 'GitHub', href: 'https://github.com', icon: Github },
-  { label: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
-  { label: 'Instagram', href: 'https://instagram.com', icon: Instagram },
-  { label: 'Twitter / X', href: 'https://x.com', icon: Twitter },
+  { label: 'GitHub', href: 'https://github.com/theyuvan', icon: Github },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/yuvan-raj', icon: Linkedin },
+  { label: 'Email', href: 'mailto:r.yuvanraj05@gmail.com', icon: Mail },
+  { label: 'Resume', href: '/Yuvan_Raj_Resume.pdf', icon: Download, download: true },
 ]
 
 export function SimpleNavigation() {
@@ -59,27 +59,33 @@ export function SimpleNavigation() {
       </AnimatePresence>
 
       <nav className="fixed top-0 left-0 right-0 z-50 px-5 sm:px-8 lg:px-12 py-5 sm:py-8">
-        <div className="max-w-[1800px] mx-auto flex items-center justify-between rounded-full border border-white/10 bg-black/40 px-5 sm:px-8 py-3 sm:py-4 backdrop-blur-xl">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-primary"></span>
-            <span className="text-gray-300 text-xs sm:text-sm font-light hidden sm:inline">Chennai, India</span>
+        <div className="relative max-w-[1800px] mx-auto rounded-full border border-white/10 bg-black/40 px-5 sm:px-8 py-3 sm:py-4 backdrop-blur-xl">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary"></span>
+              <span className="kicker-font text-white-300/85 text-[11px] sm:text-xs hidden sm:inline whitespace-nowrap">Chennai,India</span>
+            </div>
+
+            <button
+              type="button"
+              className="w-11 h-11 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setIsOpen((prev) => !prev)}
+            >
+              {isOpen ? <X size={20} className="text-black" /> : <Menu size={20} className="text-black" />}
+            </button>
           </div>
 
-          <a href="#home" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg sm:text-xl">Y</span>
-            </div>
-            <span className="text-white text-base sm:text-xl font-semibold hidden sm:inline">Yuvan Raj</span>
-          </a>
-
-          <button
-            type="button"
-            className="w-11 h-11 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition"
-            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-            onClick={() => setIsOpen((prev) => !prev)}
+          <a
+            href="#home"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3"
+            onClick={() => setIsOpen(false)}
           >
-            {isOpen ? <X size={20} className="text-black" /> : <Menu size={20} className="text-black" />}
-          </button>
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center">
+              <span className="text-white font-bold text-lg sm:text-xl">YR</span>
+            </div>
+            <span className="text-white text-base sm:text-xl font-semibold hidden sm:inline">𝚈𝚞𝚟𝚊𝚗 𝚛𝚊𝚓</span>
+          </a>
         </div>
 
         <AnimatePresence>
@@ -118,12 +124,14 @@ export function SimpleNavigation() {
                   <div className="grid grid-cols-2 gap-x-2 gap-y-0">
                     {socialLinks.map((link) => {
                       const Icon = link.icon
+                      const isExternal = link.href.startsWith('http')
                       return (
                         <a
                           key={link.label}
                           href={link.href}
-                          target="_blank"
-                          rel="noreferrer"
+                          target={isExternal ? '_blank' : undefined}
+                          rel={isExternal ? 'noreferrer' : undefined}
+                          download={link.download ? 'Yuvan_Raj_Resume.pdf' : undefined}
                           className="group flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-white/5 transition"
                         >
                           <Icon size={18} className="text-gray-500 group-hover:text-white transition flex-shrink-0" />
