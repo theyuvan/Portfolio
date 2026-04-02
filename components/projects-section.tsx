@@ -69,7 +69,7 @@ export function ProjectsSection() {
           viewport={{ once: true }}
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Featured <span className="neon-text">Projects</span>
+            Featured <span className="text-[#7E68FF]">Projects</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Showcase of innovative solutions and web3 applications
@@ -107,7 +107,7 @@ export function ProjectsSection() {
           >
             {projects.map((project, index) => (
               <ScrollStackItem key={project.id}>
-                <div className="group w-full max-w-4xl mx-auto min-h-[26rem] md:h-[clamp(24rem,58vh,34rem)] flex flex-col md:flex-row gap-0 border border-primary/20 hover:border-primary/50 transition-colors cursor-pointer rounded-3xl overflow-hidden relative bg-black">
+                <div className="group w-full max-w-4xl mx-auto min-h-[26rem] md:h-[clamp(24rem,58vh,34rem)] flex flex-col md:flex-row gap-0 border border-primary/20 hover:border-primary/50 transition-colors rounded-3xl overflow-hidden relative bg-black">
                   {/* Left – image panel (falls back to gradient until image_storage_path is added) */}
                   <div className="relative md:w-[44%] h-[42%] md:h-full overflow-hidden shrink-0">
                     {project.image_storage_path && !failedProjectImages[project.id] ? (

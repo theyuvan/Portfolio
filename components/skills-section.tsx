@@ -90,6 +90,7 @@ export function SkillsSection() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const [splineApp, setSplineApp] = useState<SplineApp | null>(null)
   const [selectedSkill, setSelectedSkill] = useState<(typeof SKILLS)[keyof typeof SKILLS] | null>(null)
+  const [isHoveringSkillKey, setIsHoveringSkillKey] = useState(false)
   const [activeSection, setActiveSection] = useState<'skills' | 'hero' | 'projects' | 'contact'>('skills')
   const [keyboardRevealed, setKeyboardRevealed] = useState(false)
   const [isInView, setIsInView] = useState(false)
@@ -121,7 +122,11 @@ export function SkillsSection() {
 
   const handleMouseHover = (e: SplineEvent) => {
     if (!splineApp || selectedSkill?.name === e.target.name) return
+    const hoveredSkill = SKILLS[e.target.name as keyof typeof SKILLS]
+    setIsHoveringSkillKey(Boolean(hoveredSkill))
+
     if (e.target.name === 'body' || e.target.name === 'platform') {
+      setIsHoveringSkillKey(false)
       setSelectedSkill(null)
       if (splineApp.getVariable('heading') && splineApp.getVariable('desc')) {
         splineApp.setVariable('heading', '')
@@ -129,8 +134,7 @@ export function SkillsSection() {
       }
     } else {
       if (!selectedSkill || selectedSkill.name !== e.target.name) {
-        const skill = SKILLS[e.target.name as keyof typeof SKILLS]
-        if (skill) setSelectedSkill(skill)
+        if (hoveredSkill) setSelectedSkill(hoveredSkill)
       }
     }
   }
@@ -285,6 +289,7 @@ export function SkillsSection() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          cursor: isHoveringSkillKey ? 'pointer' : 'default',
         }}
       >
         <h2
@@ -300,6 +305,9 @@ export function SkillsSection() {
         >
           Skills
         </h2>
+        <p style={{ textAlign: "center", color: "#aaa" }}>
+          (hint: press a key)
+        </p>
 
         <Spline
           onLoad={(app) => setSplineApp(app as unknown as SplineApp)}
