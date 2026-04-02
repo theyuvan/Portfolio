@@ -9,6 +9,7 @@ import { AboutSection } from '@/components/about-section'
 import { SkillsSection } from '@/components/skills-section'
 import { ProjectsSection } from '@/components/projects-section'
 import { ContactSection } from '@/components/contact-section'
+import { ScrollToTopButton } from '@/components/scroll-to-top-button'
 import Lenis from 'lenis'
 
 export default function Home() {
@@ -53,15 +54,27 @@ export default function Home() {
 
         {/* Remaining sections */}
         <div className="relative bg-black">
-          <AboutSection />
-          <SkillsSection />
-          <div className="mb-[3cm]">
+          <div className="mb-[5cm]">
+            <AboutSection />
+          </div>
+
+          <div className="mb-[5cm]">
+            <SkillsSection />
+          </div>
+
+          <div className="mb-[5cm]">
             <ProjectsSection />
           </div>
-          <div className="mt-[3cm]">
-            <ContactSection />
+
+          <ContactSection />
+
+          <div className="w-full px-4 sm:px-6 pb-6 sm:pb-8 pt-2 border-t border-white/10">
+            <p className="text-left text-sm sm:text-base text-gray-300">
+              © 2026 Yuvan raj. All rights reserved.
+            </p>
           </div>
         </div>
+        <ScrollToTopButton />
       </main>
     </>
   )
