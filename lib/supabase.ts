@@ -10,6 +10,7 @@ export interface Project {
   id: string
   title: string
   description: string
+  brief_description?: string | null
   technologies: string[]
   github_url: string
   live_url: string

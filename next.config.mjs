@@ -5,6 +5,13 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'zmbpeaakvmppskubwdwt.supabase.co',
+        pathname: '/storage/v1/object/**',
+      },
+    ],
   },
   // Empty turbopack config to acknowledge Turbopack usage
   turbopack: {},
