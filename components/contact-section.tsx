@@ -84,7 +84,7 @@ export function ContactSection() {
       <div className='absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(40,46,96,0.12)_0%,rgba(2,2,5,0.72)_55%,rgba(0,0,0,0.94)_100%)]' />
 
       <motion.div
-        className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+        className="absolute top-0 right-0 w-96 h-96 bg-[#7E68FF]/10 rounded-full blur-3xl"
         animate={{ x: [0, 80, 0], y: [0, 60, 0] }}
         transition={{ duration: 14, repeat: Infinity }}
         style={{ marginRight: '-180px', marginTop: '-180px' }}
@@ -98,11 +98,11 @@ export function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="order-1 w-full lg:w-[48%] glass-effect border border-primary/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-5 sm:p-6"
+            className="order-1 w-full lg:w-[48%] glass-effect border border-[#7E68FF]/40 rounded-2xl shadow-[0_0_35px_rgba(126,104,255,0.4)] p-5 sm:p-6"
           >
-            <p className="text-sm uppercase tracking-[0.2em] text-gray-300/80 mb-2">Get in touch</p>
+            <p className="kicker-font text-sm text-gray-300/80 mb-2">Get in touch</p>
             <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white">
-              Contact<span className="text-primary">.</span>
+              Contact<span className="text-[#7E68FF]">.</span>
             </h3>
 
             <form
@@ -122,7 +122,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What is your good name?"
-                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-[#7E68FF]/20 focus:border-[#7E68FF] text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -136,7 +136,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What is your email address?"
-                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-[#7E68FF]/20 focus:border-[#7E68FF] text-white transition disabled:opacity-50"
               />
             </label>
 
@@ -150,7 +150,7 @@ export function ContactSection() {
                 required
                 disabled={isSubmitting}
                 placeholder="What do you want to say?"
-                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-primary/20 focus:border-primary text-white resize-none transition disabled:opacity-50"
+                className="bg-black/35 py-3.5 sm:py-4 px-4 sm:px-5 placeholder:text-gray-400 rounded-xl outline-none border border-[#7E68FF]/20 focus:border-[#7E68FF] text-white resize-none transition disabled:opacity-50"
               />
             </label>
 
@@ -169,7 +169,7 @@ export function ContactSection() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-primary py-3 px-8 rounded-xl w-full sm:w-fit text-primary-foreground font-bold disabled:opacity-50"
+              className="bg-[#7E68FF] py-3 px-8 rounded-xl w-full sm:w-fit text-white font-bold disabled:opacity-50"
             >
               {isSubmitting ? 'Sending...' : 'Send'}
             </button>
