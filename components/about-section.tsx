@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import BounceCards from './bounce-cards'
-import { fetchAboutInfo, getPublicImageUrl } from '@/app/actions/portfolio'
+import { fetchAboutGalleryImages, fetchAboutInfo } from '@/app/actions/portfolio'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface AboutInfo {
   bio_paragraph_1: string
@@ -13,13 +14,20 @@ interface AboutInfo {
   images: string[]
 }
 
-const transformStyles = [
+const DESKTOP_TRANSFORM_STYLES = [
   'rotate(7deg) translate(-140px)',
   'rotate(0deg) translate(0px)',
   'rotate(-7deg) translate(140px)',
 ]
 
+const MOBILE_TRANSFORM_STYLES = [
+  'rotate(6deg) translate(-92px)',
+  'rotate(0deg) translate(0px)',
+  'rotate(-6deg) translate(92px)',
+]
+
 export function AboutSection() {
+  const isMobile = useIsMobile()
   const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null)
   const [aboutImages, setAboutImages] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -30,15 +38,15 @@ export function AboutSection() {
       try {
         setIsLoading(true)
         const data = await fetchAboutInfo()
+        const galleryImages = await fetchAboutGalleryImages()
+
+        if (galleryImages.length > 0) {
+          setAboutImages(galleryImages)
+        }
+
         if (data) {
           setAboutInfo(data)
-          // Get public URLs for images from Supabase Storage
-          if (data.images && Array.isArray(data.images)) {
-            const imageUrls = await Promise.all(
-              data.images.map((imagePath) => getPublicImageUrl(imagePath))
-            )
-            setAboutImages(imageUrls)
-          } else {
+          if (galleryImages.length === 0) {
             // Fallback to placeholder images if no images provided
             setAboutImages([
               'https://picsum.photos/560/560?grayscale&random=21',
@@ -72,6 +80,7 @@ export function AboutSection() {
   }
 
   const displayAboutInfo = aboutInfo || defaultAboutInfo
+  const transformStyles = isMobile ? MOBILE_TRANSFORM_STYLES : DESKTOP_TRANSFORM_STYLES
   const displayImages =
     aboutImages.length > 0
       ? aboutImages
@@ -82,7 +91,7 @@ export function AboutSection() {
         ]
 
   return (
-    <section id="about" className="py-24 px-6 relative overflow-hidden">
+    <section id="about" className="py-20 sm:py-24 px-4 sm:px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto">
 
         {/* Section Title */}
@@ -116,10 +125,10 @@ export function AboutSection() {
               </div>
             ) : (
               <BounceCards
-                className="w-full max-w-[640px]"
+                className="w-full max-w-[640px] px-2 sm:px-0"
                 images={displayImages}
-                containerWidth={640}
-                containerHeight={380}
+                containerWidth={isMobile ? 360 : 640}
+                containerHeight={isMobile ? 260 : 380}
                 animationDelay={1.5}
                 animationStagger={0.15}
                 easeType="elastic.out(1, 0.5)"
@@ -134,7 +143,7 @@ export function AboutSection() {
             {/* Bio */}
             <div className="text-left mb-10">
               <motion.p
-                className="text-gray-300 text-lg leading-relaxed mb-4"
+                className="text-gray-300 text-base sm:text-lg leading-relaxed mb-4"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
@@ -143,7 +152,7 @@ export function AboutSection() {
                 {displayAboutInfo.bio_paragraph_1}
               </motion.p>
               <motion.p
-                className="text-gray-400 text-lg leading-relaxed"
+                className="text-gray-400 text-base sm:text-lg leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.15 }}
