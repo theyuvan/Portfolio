@@ -33,7 +33,7 @@ export function MinimalHeroSection() {
     loadHeroImage()
   }, [])
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-12 pt-20 sm:pt-24 bg-transparent">
+    <section className="min-h-screen flex items-start sm:items-center justify-center px-4 sm:px-6 lg:px-12 pt-32 sm:pt-24 bg-transparent">
       <div className="max-w-[1800px] mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-24 items-center">
           {/* Left - Text Content */}
@@ -57,7 +57,7 @@ export function MinimalHeroSection() {
             </div>
 
             {/* Subtitle */}
-            <p className="text-gray-300 text-xl sm:text-2xl md:text-lg lg:text-xl font-light max-w-xl pt-2 sm:pt-4 mx-auto lg:mx-0">
+            <p className="kicker-font text-gray-300 text-xl sm:text-2xl md:text-lg lg:text-xl font-light max-w-xl pt-2 sm:pt-4 mx-auto lg:mx-0">
               Developer | Blockchain Enthusiast
             </p>
           </motion.div>
