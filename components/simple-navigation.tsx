@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Download,
   FolderKanban,
@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { fetchResumeFileUrl } from '@/app/actions/portfolio'
 
 const menuItems = [
   { label: 'HOME', href: '#home', icon: Home },
@@ -24,7 +25,7 @@ const menuItems = [
   { label: 'CONTACT', href: '#contact', icon: MailOpen },
 ]
 
-const socialLinks = [
+const baseSocialLinks = [
   { label: 'GitHub', href: 'https://github.com/theyuvan', icon: Github },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/yuvan-raj', icon: Linkedin },
   { label: 'Email', href: 'mailto:r.yuvanraj05@gmail.com', icon: Mail },
@@ -33,6 +34,34 @@ const socialLinks = [
 
 export function SimpleNavigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const [resumeHref, setResumeHref] = useState('/Yuvan_Raj_Resume.pdf')
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadResumeUrl = async () => {
+      try {
+        const url = await fetchResumeFileUrl()
+        if (isMounted && url) {
+          setResumeHref(url)
+        }
+      } catch {
+        if (isMounted) {
+          setResumeHref('/Yuvan_Raj_Resume.pdf')
+        }
+      }
+    }
+
+    void loadResumeUrl()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const socialLinks = baseSocialLinks.map((link) =>
+    link.label === 'Resume' ? { ...link, href: resumeHref } : link
+  )
 
   const handleNavigate = (href: string) => {
     setIsOpen(false)
@@ -61,9 +90,9 @@ export function SimpleNavigation() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-5 sm:px-8 lg:px-12 py-5 sm:py-8">
         <div className="relative max-w-[1800px] mx-auto rounded-full border border-white/10 bg-black/40 px-5 sm:px-8 py-3 sm:py-4 backdrop-blur-xl">
           <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary"></span>
-              <span className="kicker-font text-white-300/85 text-[11px] sm:text-xs hidden sm:inline whitespace-nowrap">Chennai,India</span>
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              <span className="kicker-font text-white-300/85 text-xs whitespace-nowrap">Chennai, India</span>
             </div>
 
             <button
@@ -78,7 +107,7 @@ export function SimpleNavigation() {
 
           <a
             href=""
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3"
+            className="absolute left-5 sm:left-1/2 top-1/2 -translate-y-1/2 sm:-translate-x-1/2 flex items-center gap-3"
             onClick={() => setIsOpen(false)}
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center">
@@ -131,7 +160,7 @@ export function SimpleNavigation() {
                           href={link.href}
                           target={isExternal ? '_blank' : undefined}
                           rel={isExternal ? 'noreferrer' : undefined}
-                          download={link.download ? 'Yuvan_Raj_Resume.pdf' : undefined}
+                          download={link.download && !isExternal ? 'Yuvan_Raj_Resume.pdf' : undefined}
                           className="group flex items-center gap-3 py-3 px-3 rounded-xl hover:bg-white/5 transition"
                         >
                           <Icon size={18} className="text-gray-500 group-hover:text-white transition flex-shrink-0" />

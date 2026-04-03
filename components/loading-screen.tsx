@@ -1,27 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-export function LoadingScreen() {
-  const [isLoading, setIsLoading] = useState(true)
+interface LoadingScreenProps {
+  progress: number
+  isExiting?: boolean
+}
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2500)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  if (!isLoading) return null
-
+export function LoadingScreen({ progress, isExiting = false }: LoadingScreenProps) {
   return (
     <motion.div
       className="fixed inset-0 bg-background z-50 flex items-center justify-center"
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: isExiting ? 0 : 1 }}
+      transition={{ duration: 0.45, ease: 'easeOut' }}
+      style={{ pointerEvents: isExiting ? 'none' : 'auto' }}
     >
+      <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-10">
+        <motion.p
+          className="kicker-font text-6xl sm:text-7xl font-semibold text-white tabular-nums leading-none"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {progress}%
+        </motion.p>
+      </div>
+
       <div className="relative w-32 h-32">
         {/* Outer rotating ring */}
         <motion.div
@@ -56,7 +61,7 @@ export function LoadingScreen() {
         transition={{ delay: 0.3 }}
       >
         <p className="text-sm text-muted-foreground tracking-widest uppercase">
-          Loading Experience
+          Cooking Something
         </p>
         <motion.div
           className="flex justify-center gap-1 mt-2"

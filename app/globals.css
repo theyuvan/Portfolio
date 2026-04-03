@@ -295,6 +295,16 @@
     animation: float 3s ease-in-out infinite;
   }
 
+  .trafalgar-font {
+    font-family: 'Trafalgar', 'Trajan Pro', 'Cinzel', 'Times New Roman', serif;
+    letter-spacing: 0.06em;
+  }
+
+  .turbo-driver-font {
+    font-family: 'Turbo Driver', 'Trafalgar', 'Cinzel', 'Segoe UI', sans-serif;
+    letter-spacing: 0.04em;
+  }
+
   .animate-glow-border {
     animation: glow-border 2s ease-in-out infinite;
   }
