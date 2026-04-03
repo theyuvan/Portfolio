@@ -3,6 +3,42 @@
 import { supabase, Project, AboutInfo, ContactSubmission } from '@/lib/supabase'
 import nodemailer from 'nodemailer'
 
+type CacheEntry<T> = {
+  value: T
+  expiresAt: number
+}
+
+const CACHE_TTL_MS = 5 * 60 * 1000
+
+const cacheState = {
+  projects: null as CacheEntry<Project[] | null> | null,
+  aboutInfo: null as CacheEntry<AboutInfo | null> | null,
+  aboutImages: null as CacheEntry<string[]> | null,
+  heroImage: null as CacheEntry<string | null> | null,
+  resumeFile: null as CacheEntry<string | null> | null,
+}
+
+const inFlight = {
+  projects: null as Promise<Project[] | null> | null,
+  aboutInfo: null as Promise<AboutInfo | null> | null,
+  aboutImages: null as Promise<string[]> | null,
+  heroImage: null as Promise<string | null> | null,
+  resumeFile: null as Promise<string | null> | null,
+}
+
+function getCachedValue<T>(entry: CacheEntry<T> | null): T | null {
+  if (!entry) return null
+  if (Date.now() > entry.expiresAt) return null
+  return entry.value
+}
+
+function setCachedValue<T>(key: keyof typeof cacheState, value: T) {
+  ;(cacheState as Record<string, CacheEntry<unknown> | null>)[key] = {
+    value,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  }
+}
+
 // Validate Gmail credentials
 function hasValidGmailCredentials(user: string | undefined, password: string | undefined): boolean {
   return !!(user && password && user.includes('@gmail.com'))
@@ -36,6 +72,12 @@ async function retry<T>(fn: () => Promise<T>, attempts = 3, waitMs = 350): Promi
 
 // Fetch all projects from Supabase
 export async function fetchProjects(): Promise<Project[] | null> {
+  const cached = getCachedValue(cacheState.projects)
+  if (cached !== null) return cached
+
+  if (inFlight.projects) return inFlight.projects
+
+  inFlight.projects = (async () => {
   try {
     const { data, error } = await retry(async () => {
       return await supabase
@@ -74,6 +116,7 @@ export async function fetchProjects(): Promise<Project[] | null> {
       })
     )
 
+    setCachedValue('projects', projectsWithImageUrls)
     return projectsWithImageUrls
   } catch (error) {
     if (!isNetworkLookupFailure(error)) {
@@ -81,10 +124,21 @@ export async function fetchProjects(): Promise<Project[] | null> {
     }
     return null
   }
+  })().finally(() => {
+    inFlight.projects = null
+  })
+
+  return inFlight.projects
 }
 
 // Fetch about info from Supabase
 export async function fetchAboutInfo(): Promise<AboutInfo | null> {
+  const cached = getCachedValue(cacheState.aboutInfo)
+  if (cached !== null) return cached
+
+  if (inFlight.aboutInfo) return inFlight.aboutInfo
+
+  inFlight.aboutInfo = (async () => {
   try {
     const { data, error } = await supabase
       .from('about_info')
@@ -98,6 +152,7 @@ export async function fetchAboutInfo(): Promise<AboutInfo | null> {
       return null
     }
 
+    setCachedValue('aboutInfo', data as AboutInfo)
     return data as AboutInfo
   } catch (error) {
     if (!isNetworkLookupFailure(error)) {
@@ -105,42 +160,45 @@ export async function fetchAboutInfo(): Promise<AboutInfo | null> {
     }
     return null
   }
+  })().finally(() => {
+    inFlight.aboutInfo = null
+  })
+
+  return inFlight.aboutInfo
 }
 
 // Fetch About section gallery images from Supabase Storage
 export async function fetchAboutGalleryImages(): Promise<string[]> {
+  const cached = getCachedValue(cacheState.aboutImages)
+  if (cached !== null) return cached
+
+  if (inFlight.aboutImages) return inFlight.aboutImages
+
+  inFlight.aboutImages = (async () => {
   const fileNames = ['image1.png', 'image2.png', 'image3.png']
 
   try {
     const urls = await Promise.all(
       fileNames.map(async (fileName) => {
         const publicUrl = await getPublicImageUrl(fileName, 'portfolio-images')
-        if (!isHttpUrl(publicUrl)) return ''
-
-        try {
-          const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 2500)
-          const response = await fetch(publicUrl, {
-            method: 'HEAD',
-            cache: 'no-store',
-            signal: controller.signal,
-          })
-          clearTimeout(timeoutId)
-
-          return response.ok ? publicUrl : ''
-        } catch {
-          return ''
-        }
+        return isHttpUrl(publicUrl) ? publicUrl : ''
       })
     )
 
-    return urls.filter(isHttpUrl)
+    const result = urls.filter(isHttpUrl)
+    setCachedValue('aboutImages', result)
+    return result
   } catch (error) {
     if (!isNetworkLookupFailure(error)) {
       console.error('Error fetching about gallery images:', error)
     }
     return []
   }
+  })().finally(() => {
+    inFlight.aboutImages = null
+  })
+
+  return inFlight.aboutImages
 }
 
 // Get public Supabase Storage URL for an image
@@ -176,6 +234,12 @@ export async function getSignedImageUrl(
 
 // Fetch hero profile image from Supabase Storage
 export async function fetchHeroImage(): Promise<string | null> {
+  const cached = getCachedValue(cacheState.heroImage)
+  if (cached !== null) return cached
+
+  if (inFlight.heroImage) return inFlight.heroImage
+
+  inFlight.heroImage = (async () => {
   try {
     const candidatePaths = ['yuvanraj.jpg', 'hero/yuvanraj.jpg', 'profile/yuvanraj.jpg']
 
@@ -185,30 +249,62 @@ export async function fetchHeroImage(): Promise<string | null> {
         .getPublicUrl(path)
 
       if (isHttpUrl(data?.publicUrl)) {
-        try {
-          const controller = new AbortController()
-          const timeoutId = setTimeout(() => controller.abort(), 2500)
-          const response = await fetch(data.publicUrl, {
-            method: 'HEAD',
-            cache: 'no-store',
-            signal: controller.signal,
-          })
-          clearTimeout(timeoutId)
-
-          if (response.ok) {
-            return data.publicUrl
-          }
-        } catch {
-          // Ignore and continue to fallback.
-        }
+        setCachedValue('heroImage', data.publicUrl)
+        return data.publicUrl
       }
     }
 
+    setCachedValue('heroImage', '/placeholder-user.jpg')
     return '/placeholder-user.jpg'
   } catch (error) {
     console.error('Error fetching hero image:', error)
     return '/placeholder-user.jpg'
   }
+  })().finally(() => {
+    inFlight.heroImage = null
+  })
+
+  return inFlight.heroImage
+}
+
+// Fetch resume PDF URL from Supabase Storage with a local fallback.
+export async function fetchResumeFileUrl(): Promise<string | null> {
+  const cached = getCachedValue(cacheState.resumeFile)
+  if (cached !== null) return cached
+
+  if (inFlight.resumeFile) return inFlight.resumeFile
+
+  inFlight.resumeFile = (async () => {
+    try {
+      const candidatePaths = [
+        'Resume.pdf',
+        'Yuvan_Raj_Resume.pdf',
+        'resume/Yuvan_Raj_Resume.pdf',
+        'documents/Yuvan_Raj_Resume.pdf',
+      ]
+
+      for (const path of candidatePaths) {
+        const publicUrl = await getPublicImageUrl(path, 'portfolio-images')
+        if (isHttpUrl(publicUrl)) {
+          setCachedValue('resumeFile', publicUrl)
+          return publicUrl
+        }
+      }
+
+      // Fallback to the local public file so resume link never breaks.
+      setCachedValue('resumeFile', '/Yuvan_Raj_Resume.pdf')
+      return '/Yuvan_Raj_Resume.pdf'
+    } catch (error) {
+      if (!isNetworkLookupFailure(error)) {
+        console.error('Error fetching resume file URL:', error)
+      }
+      return '/Yuvan_Raj_Resume.pdf'
+    }
+  })().finally(() => {
+    inFlight.resumeFile = null
+  })
+
+  return inFlight.resumeFile
 }
 
 // Submit contact form

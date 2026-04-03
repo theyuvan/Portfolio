@@ -52,6 +52,13 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="#000000" />
+        <link rel="preload" href="/assets/skills_keyboardss.spline" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/models/planet/scene.gltf" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/models/planet/scene.bin" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/models/planet/textures/Planet_baseColor.png" as="image" />
+        <link rel="preload" href="/models/planet/textures/Clouds_baseColor.png" as="image" />
+        <link rel="preload" href="/assets/sounds/click.mp3" as="audio" />
+        <link rel="preload" href="/assets/sounds/magic.mp3" as="audio" />
       </head>
       <body className={`${sora.variable} font-sans antialiased dark`}>
         <ThemeProvider
