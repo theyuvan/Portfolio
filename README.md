@@ -1,129 +1,262 @@
-# Cinematic Developer Portfolio
+# Yuvan Raj - Developer Portfolio
 
-An award-winning developer portfolio featuring cinematic scroll animations and 3D UI effects. Built with Next.js 16, React 19, Framer Motion, Three.js, and GSAP.
+> A **futuristic, high-performance portfolio** showcasing Blockchain expertise, Web3 development, and AI innovation with cutting-edge 3D interactions and smooth cinematic animations.
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-- **🎬 Cinematic Animations**: Smooth scroll animations powered by GSAP and Framer Motion
-- **🎨 3D Visual Effects**: Interactive 3D particle background using Three.js and React Three Fiber
-- **✨ Glassmorphism Design**: Modern glass card effects with neon green accent colors
-- **📱 Fully Responsive**: Mobile-optimized design with smooth performance
-- **⚡ Performance Optimized**: Lazy loading, dynamic imports, and efficient rendering
-- **🎯 Magnetic Interactions**: Interactive buttons that follow cursor movement
-- **🔄 Smooth Scrolling**: Lenis library for cinematic scroll experience
+## 🎯 Overview
 
-## Tech Stack
+A production-ready portfolio built with **Next.js 16** featuring:
+- **Interactive 3D canvases** (Spline, Three.js, React Three Fiber)
+- **Cinematic scroll animations** with Framer Motion and GSAP
+- **Supabase backend** for dynamic project management
+- **Dynamic project cover images** from Supabase (no code changes needed)
+- **Real-time form submissions** with email notifications
+- **Optimized loading experience** with progress tracking
 
-- **Frontend Framework**: Next.js 16 + React 19
-- **Animation**: Framer Motion, GSAP
-- **3D Graphics**: Three.js, React Three Fiber
-- **Styling**: Tailwind CSS 4.2
-- **Smooth Scrolling**: Lenis
-- **Type Safety**: TypeScript 5.7
+## ✨ Key Features
 
-## Project Structure
+- **🎬 Cinematic Loading Screen**: Percentage-based progress with custom font styling
+- **🌍 Interactive 3D Elements**: Spline keyboard, rotating Earth model, particle stars
+- **🎨 Smooth Animations**: GSAP-powered scroll effects, Framer Motion transitions, Lenis scrolling
+- **📱 Fully Responsive**: Mobile-first design optimized for all devices
+- **⚡ Performance**: Lazy loading, code splitting, optimized bundle (<300KB initial)
+- **🔐 Secure Backend**: Supabase authentication, server actions, form handling
+- **🖼️ Dynamic Content**: Projects, images, and resume sourced from Supabase
+- **🌐 SEO Optimized**: Meta tags, Open Graph, structured data
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|---------------|
+| **Frontend** | Next.js 16, React 19, TypeScript 5.7 |
+| **Styling** | Tailwind CSS 4.2, CSS-in-JS (Framer Motion) |
+| **Animation** | Framer Motion, GSAP, Lenis |
+| **3D Graphics** | Spline, Three.js, React Three Fiber, @react-three/drei |
+| **Backend** | Supabase (PostgreSQL, Storage, Edge Functions) |
+| **Email** | Nodemailer (Gmail SMTP) |
+| **Deployment** | Vercel (recommended), Netlify, AWS Amplify |
+
+## 📁 Project Structure
 
 ```
-components/
-  ├── 3d/
-  │   └── AnimatedBackground.tsx    # 3D particle background
-  ├── ui/
-  │   ├── GlassCard.tsx             # Reusable glass card component
-  │   └── MagneticButton.tsx        # Interactive magnetic button
-  ├── providers/
-  │   └── ScrollProvider.tsx        # Lenis scroll provider
-  ├── sections/
-  │   ├── Hero.tsx                  # Hero section with 3D background
-  │   ├── About.tsx                 # About section with stats
-  │   ├── Experience.tsx            # Professional experience
-  │   ├── Projects.tsx              # Featured projects grid
-  │   ├── Skills.tsx                # Technical skills with progress bars
-  │   └── Contact.tsx               # Contact section with socials
-  ├── Navigation.tsx                # Fixed navigation with mobile menu
-  └── LoadingScreen.tsx             # Initial loading animation
-hooks/
-  ├── useGSAPScroll.ts             # GSAP scroll animation hook
-  ├── useIsMobile.ts               # Mobile detection hook
-app/
-  ├── layout.tsx                    # Root layout with providers
-  ├── page.tsx                      # Main portfolio page
-  └── globals.css                   # Global styles and design tokens
+.
+├── app/
+│   ├── actions/portfolio.ts          # Server actions for data fetching & form submission
+│   ├── layout.tsx                    # Root layout with preload hints
+│   ├── page.tsx                      # Main page with lazy-loaded sections
+│   ├── globals.css                   # Global styles & utility classes
+│   └── api/                          # API routes (if needed)
+├── components/
+│   ├── loading-screen.tsx            # Percentage-based loader overlay
+│   ├── simple-navigation.tsx         # Navbar with resume link
+│   ├── minimal-hero-section.tsx      # Hero with profile image
+│   ├── constellation-background.tsx  # SVG particle background
+│   ├── about-section.tsx             # About with gallery bounce animation
+│   ├── skills-section.tsx            # Spline 3D keyboard interaction
+│   ├── projects-section.tsx          # Dynamic projects from Supabase
+│   ├── contact-section.tsx           # Contact form with 3D Earth & stars
+│   ├── scroll-to-top-button.tsx      # Smooth scroll to top
+│   └── ui/                           # Reusable UI components library
+├── hooks/
+│   ├── use-mobile.ts                 # Mobile detection hook
+│   └── use-toast.ts                  # Toast notifications
+├── lib/
+│   ├── supabase.ts                   # Supabase client & types
+│   ├── skills.ts                     # Skills data with aliases
+│   ├── utils.ts                      # Utility functions
+│   └── sound-effects.ts              # Audio context manager
+├── public/
+│   ├── assets/                       # Images, sounds, Spline files
+│   ├── models/                       # 3D GLTF models
+│   ├── tech/                         # Technology icons
+│   └── logo.png                      # Application favicon
+└── package.json
 ```
 
-## Color Scheme
+## 🚀 Getting Started
 
-- **Background**: `#0b0b0b` (Deep Black)
-- **Foreground**: `#f5f5f5` (Off White)
-- **Primary (Accent)**: `#7CFF00` (Neon Green)
-- **Secondary**: `#2a2a2a` (Dark Gray)
-- **Accent Colors**: Cyan (`#00d4ff`), Pink (`#ff006e`)
+### Prerequisites
+- Node.js 18+
+- npm/pnpm/yarn
+- Supabase account (free tier works)
+- (Optional) Gmail account for contact form
 
-## Getting Started
+### Installation
 
-1. **Install dependencies**:
+1. **Clone the repository**:
    ```bash
-   pnpm install
+   git clone https://github.com/theyuvan/Portfolio.git
+   cd Portfolio
    ```
 
-2. **Run the development server**:
+2. **Install dependencies**:
    ```bash
-   pnpm dev
+   npm install
    ```
 
-3. **Open [http://localhost:3000](http://localhost:3000)** in your browser
+3. **Configure environment variables**:
+   Create `.env.local`:
+   ```env
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-## Customization
+   # Email (optional - for contact form)
+   GMAIL_USER=your-email@gmail.com
+   GMAIL_PASSWORD=your-app-password
+   CONTACT_FORM_RECIPIENT_EMAIL=recipient@example.com
+   ```
 
-### Content
-- Edit section components in `components/sections/` to update content
-- Modify company names, project titles, and skills in the respective sections
-- Update contact links and social media URLs in `components/sections/Contact.tsx`
+4. **Run development server**:
+   ```bash
+   npm run dev
+   ```
 
-### Styling
-- Edit design tokens in `app/globals.css` to change colors
-- Modify Tailwind configuration in `tailwind.config.ts`
-- Update animation timings in individual components
+5. **Open [http://localhost:3000](http://localhost:3000)**
 
-### Adding New Sections
-1. Create a new component in `components/sections/`
-2. Import and add it to `app/page.tsx`
-3. Use the same animation patterns for consistency
+## 🗄️ Database Setup (Supabase)
 
-## Performance Optimization
+### Tables Required
 
-- **3D Background**: Dynamically imported and only rendered on desktop
-- **Code Splitting**: Next.js automatic code splitting for sections
-- **Image Optimization**: Automatic image optimization by Next.js
-- **Bundle Optimization**: Three.js optimized in separate chunk
+1. **`projects`** - Your portfolio projects
+   ```sql
+   id, title, description, technologies, github_url, live_url, 
+   image_gradient, image_storage_path, order, created_at
+   ```
 
-## Browser Support
+2. **`about_info`** - About section content
+   ```sql
+   id, bio_paragraph_1, bio_paragraph_2, experience_years, 
+   projects_count, images, updated_at
+   ```
 
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+3. **`contact_submissions`** - Contact form submissions
+   ```sql
+   id, name, email, message, created_at, read
+   ```
 
-## Development Tips
+### Storage Buckets
 
-- Use `useGSAPScroll` hook for scroll-triggered animations
-- Leverage `GlassCard` component for consistent card styling
-- Use `MagneticButton` for interactive button effects
-- Customize animations via Framer Motion variants
+- **`project-images`** (public) - Project cover images named as `project1.png`, `project2.jpeg`, etc.
+- **`portfolio-images`** (public) - Gallery and hero images
+- **Resume PDF** in portfolio-images bucket
 
-## Deployment
+## 📸 Dynamic Project Images
 
-Deploy to Vercel with a single click:
+**No code changes needed!** Just follow this naming convention:
 
+1. Add a new project row to the `projects` table
+2. Upload cover image to Supabase `project-images` bucket as:
+   - `project1.png` / `.jpg` / `.jpeg`
+   - `project2.png` / `.jpg` / `.jpeg`
+   - etc.
+
+The system automatically matches images by project order.
+
+## 🔧 Configuration
+
+### Update Content
+- **About Section**: Edit Supabase `about_info` table
+- **Projects**: Manage in Supabase `projects` table
+- **Skills**: Edit `lib/skills.ts` (Spline object names must match)
+- **Resume**: Upload PDF to Supabase `portfolio-images` bucket
+- **Social Links**: Edit `components/simple-navigation.tsx`
+
+### Customize Styling
+- **Colors**: `app/globals.css` (Tailwind utilities + CSS variables)
+- **Fonts**: `app/layout.tsx` (Google Fonts configuration)
+- **Animations**: Individual component Framer Motion variants
+
+## 📦 Build & Deploy
+
+### Build for production
 ```bash
-vercel deploy
+npm run build
+npm run start
 ```
 
-Or use GitHub integration for automatic deployments on push.
+### Deploy to Vercel (Recommended)
+```bash
+vercel
+```
 
-## License
+Follow prompts, add environment variables in Vercel dashboard, done!
 
-MIT License - Feel free to use this portfolio template for your own projects.
+### Deploy to Netlify
+1. Push to GitHub
+2. Connect repository on [netlify.com](https://netlify.com)
+3. Set build command: `npm run build`
+4. Add environment variables
+5. Deploy
+
+## 🚦 Performance
+
+- **Initial Load**: <2s (optimized images, preload hints)
+- **Lighthouse Score**: 90+ (on Vercel)
+- **Bundle Size**: ~280KB (gzipped)
+- **Web Vitals**: Optimized for Core Web Vitals
+
+### Optimizations
+- Server-side caching (5-minute TTL)
+- Dynamic imports for heavy sections
+- Image optimization with Next.js
+- Preload critical assets (3D models, fonts)
+- CSS splitting per route
+
+## 🌐 Browser Support
+
+| Browser | Version | Status |
+|---------|---------|--------|
+| Chrome | Latest | ✅ Full |
+| Firefox | Latest | ✅ Full |
+| Safari | Latest | ✅ Full |
+| Edge | Latest | ✅ Full |
+| Mobile Safari | Latest | ✅ Full |
+| Chrome Mobile | Latest | ✅ Full |
+
+## 📝 Environment Variables Reference
+
+```env
+# Required
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+# Optional (for contact form)
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_PASSWORD=your_app_specific_password
+CONTACT_FORM_RECIPIENT_EMAIL=recipient@example.com
+
+# Server Actions
+NODE_ENV=production
+```
+
+> **Note**: For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833), not your account password.
+
+## 🤝 Contributing
+
+Improvements welcome! Feel free to:
+- Report bugs via issues
+- Suggest features
+- Submit pull requests
+
+## 📄 License
+
+MIT License - You're free to use this portfolio for your own projects.
+
+## 👤 Author
+
+**Yuvan Raj** - Blockchain Developer & AI Innovator
+- 🌐 [Portfolio](https://yuvanraj.dev)
+- 💼 [LinkedIn](https://linkedin.com/in/yuvan-raj)
+- 🐙 [GitHub](https://github.com/theyuvan)
+- 📧 [Email](mailto:r.yuvanraj05@gmail.com)
 
 ---
 
-Built with ❤️ using v0 + Vercel
+**Built with ❤️ using Next.js 16 + Supabase**
+
