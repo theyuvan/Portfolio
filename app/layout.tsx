@@ -11,7 +11,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: 'Yuvan Raj | Blockchain Developer & AI Innovator',
+  title: 'Yuvan Raj | Developer & Blockchain Enthusiast',
   description: 'Award-winning futuristic developer portfolio with interactive 3D elements, smooth animations, and cinematic experience. Blockchain, Web3, and AI expertise.',
   generator: 'Next.js',
   keywords: ['Blockchain', 'Web3', 'AI', 'Developer', 'Portfolio', 'React', 'Next.js'],
