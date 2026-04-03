@@ -55,7 +55,7 @@ export function LoadingScreen({ progress, isExiting = false }: LoadingScreenProp
 
       {/* Loading text */}
       <motion.div
-        className="absolute bottom-20 text-center"
+        className="absolute bottom-40 sm:bottom-20 text-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
