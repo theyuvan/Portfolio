@@ -8,7 +8,11 @@ import { ContactStarsCanvas } from './contact-stars-canvas'
 import { submitContactForm } from '@/app/actions/portfolio'
 import soundEffects from '@/lib/sound-effects'
 
-export function ContactSection() {
+interface ContactSectionProps {
+  onReady?: () => void
+}
+
+export function ContactSection({ onReady }: ContactSectionProps) {
   const isMobile = useIsMobile()
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -183,7 +187,7 @@ export function ContactSection() {
             viewport={{ once: true }}
             className="order-2 w-full lg:w-[50%] h-[320px] sm:h-[420px] md:h-[560px]"
           >
-            <ContactEarthCanvas isMobile={isMobile} />
+            <ContactEarthCanvas isMobile={isMobile} onReady={onReady} />
           </motion.div>
         </div>
         </div>

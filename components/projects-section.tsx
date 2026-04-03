@@ -20,7 +20,11 @@ interface Project {
   live_url: string
 }
 
-export function ProjectsSection() {
+interface ProjectsSectionProps {
+  onReady?: () => void
+}
+
+export function ProjectsSection({ onReady }: ProjectsSectionProps) {
   const isMobile = useIsMobile()
   const [projects, setProjects] = useState<Project[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -43,6 +47,7 @@ export function ProjectsSection() {
         setError('Failed to load projects from Supabase')
       } finally {
         setIsLoading(false)
+        onReady?.()
       }
     }
 

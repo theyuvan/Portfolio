@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Preload, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -8,10 +8,18 @@ import { CanvasLoader } from './canvas-loader'
 
 interface EarthProps {
   isMobile: boolean
+  onReady?: () => void
 }
 
-function EarthModel({ earthRef, isMobile }: { earthRef: React.RefObject<any>; isMobile: boolean }) {
+function EarthModel({ earthRef, isMobile, onReady }: { earthRef: React.RefObject<any>; isMobile: boolean; onReady?: () => void }) {
   const { nodes, materials } = useGLTF('/models/planet/scene.gltf') as any
+  const didReportReadyRef = useRef(false)
+
+  useEffect(() => {
+    if (didReportReadyRef.current) return
+    didReportReadyRef.current = true
+    onReady?.()
+  }, [onReady])
 
   return (
     <group
@@ -46,7 +54,7 @@ function EarthModel({ earthRef, isMobile }: { earthRef: React.RefObject<any>; is
   )
 }
 
-function Earth({ isMobile }: EarthProps) {
+function Earth({ isMobile, onReady }: EarthProps) {
   const earthRef = useRef<any>(null)
 
   useFrame(() => {
@@ -71,16 +79,17 @@ function Earth({ isMobile }: EarthProps) {
           makeDefault
         />
       )}
-      <EarthModel earthRef={earthRef} isMobile={isMobile} />
+      <EarthModel earthRef={earthRef} isMobile={isMobile} onReady={onReady} />
     </>
   )
 }
 
 interface ContactEarthCanvasProps {
   isMobile?: boolean
+  onReady?: () => void
 }
 
-export function ContactEarthCanvas({ isMobile = false }: ContactEarthCanvasProps) {
+export function ContactEarthCanvas({ isMobile = false, onReady }: ContactEarthCanvasProps) {
   const cameraSettings = isMobile
     ? { position: [0, 0.1, 8.5] as [number, number, number], fov: 43 }
     : { position: [0, 0, 6.4] as [number, number, number], fov: 52 }
@@ -100,7 +109,7 @@ export function ContactEarthCanvas({ isMobile = false }: ContactEarthCanvasProps
         <ambientLight intensity={0.65} />
         <directionalLight position={[2.6, 1.7, 2]} intensity={0.9} />
         <pointLight position={[-2.6, -1.2, -2]} intensity={0.25} color='#a592ff' />
-        <Earth isMobile={isMobile} />
+        <Earth isMobile={isMobile} onReady={onReady} />
       </Suspense>
       <Preload all />
     </Canvas>

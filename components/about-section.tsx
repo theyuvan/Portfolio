@@ -14,6 +14,10 @@ interface AboutInfo {
   images: string[]
 }
 
+interface AboutSectionProps {
+  onReady?: () => void
+}
+
 const DESKTOP_TRANSFORM_STYLES = [
   'rotate(7deg) translate(-140px)',
   'rotate(0deg) translate(0px)',
@@ -26,7 +30,7 @@ const MOBILE_TRANSFORM_STYLES = [
   'rotate(-6deg) translate(92px)',
 ]
 
-export function AboutSection() {
+export function AboutSection({ onReady }: AboutSectionProps) {
   const isMobile = useIsMobile()
   const [aboutInfo, setAboutInfo] = useState<AboutInfo | null>(null)
   const [aboutImages, setAboutImages] = useState<string[]>([])
@@ -49,9 +53,9 @@ export function AboutSection() {
           if (galleryImages.length === 0) {
             // Fallback to placeholder images if no images provided
             setAboutImages([
-              'https://picsum.photos/560/560?grayscale&random=21',
-              'https://picsum.photos/520/520?grayscale&random=22',
-              'https://picsum.photos/500/500?grayscale&random=23',
+              'https://lightbearers.org/img/fallback-profile.jpg',
+              'https://lightbearers.org/img/fallback-profile.jpg',
+              'https://lightbearers.org/img/fallback-profile.jpg',
             ])
           }
         } else {
@@ -62,6 +66,7 @@ export function AboutSection() {
         setError('Failed to load about information')
       } finally {
         setIsLoading(false)
+        onReady?.()
       }
     }
 
@@ -85,9 +90,9 @@ export function AboutSection() {
     aboutImages.length > 0
       ? aboutImages
       : [
-          'https://picsum.photos/560/560?grayscale&random=21',
-          'https://picsum.photos/520/520?grayscale&random=22',
-          'https://picsum.photos/500/500?grayscale&random=23',
+          'https://lightbearers.org/img/fallback-profile.jpg',
+          'https://lightbearers.org/img/fallback-profile.jpg',
+          'https://lightbearers.org/img/fallback-profile.jpg',
         ]
 
   return (

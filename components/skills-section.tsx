@@ -83,9 +83,31 @@ const STATES = {
   },
 } as const
 
-export function SkillsSection() {
-  const isMobile = useMediaQuery('(max-width: 768px)')
-  const isPhone = useMediaQuery('(max-width: 640px)')
+interface SkillsSectionProps {
+  onReady?: () => void
+}
+
+const SKILL_NAME_ALIASES: Record<string, string> = {
+  solidity: 'prettier',
+  prettier: 'prettier',
+}
+
+function resolveSkillKey(name: string) {
+  return SKILL_NAME_ALIASES[name] ?? name
+}
+
+export function SkillsSection({ onReady }: SkillsSectionProps) {
+  const onReadyRef = useRef(false)
+  // Get viewport width with proper client-side initialization
+  const [viewportWidth, setViewportWidth] = useState(() => {
+    if (typeof window === 'undefined') return 768
+    return window.innerWidth
+  })
+  
+  // Direct viewport-based mobile detection (more reliable than media queries on real devices)
+  const isMobile = viewportWidth < 769
+  const isPhone = viewportWidth < 641
+  
   const splineContainer = useRef<HTMLDivElement | null>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
   const [splineApp, setSplineApp] = useState<SplineApp | null>(null)
@@ -94,6 +116,15 @@ export function SkillsSection() {
   const [activeSection, setActiveSection] = useState<'skills' | 'hero' | 'projects' | 'contact'>('skills')
   const [keyboardRevealed, setKeyboardRevealed] = useState(false)
   const [isInView, setIsInView] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const keyboardStates = (section: keyof typeof STATES) => {
     return STATES[section][isMobile ? 'mobile' : 'desktop']
@@ -121,11 +152,14 @@ export function SkillsSection() {
   }, [])
 
   const handleMouseHover = (e: SplineEvent) => {
-    if (!splineApp || selectedSkill?.name === e.target.name) return
-    const hoveredSkill = SKILLS[e.target.name as keyof typeof SKILLS]
+    if (!splineApp) return
+    const resolvedName = resolveSkillKey(e.target.name)
+    if (selectedSkill?.name === resolvedName) return
+
+    const hoveredSkill = SKILLS[resolvedName as keyof typeof SKILLS]
     setIsHoveringSkillKey(Boolean(hoveredSkill))
 
-    if (e.target.name === 'body' || e.target.name === 'platform') {
+    if (resolvedName === 'body' || resolvedName === 'platform') {
       setIsHoveringSkillKey(false)
       setSelectedSkill(null)
       if (splineApp.getVariable('heading') && splineApp.getVariable('desc')) {
@@ -142,8 +176,8 @@ export function SkillsSection() {
   useEffect(() => {
     if (!selectedSkill || !splineApp) return
     if (isPhone) {
-      splineApp.setVariable('heading', selectedSkill.label)
-      splineApp.setVariable('desc', '')
+      splineApp.setVariable('heading', '')
+      splineApp.setVariable('desc', selectedSkill.label)
     } else {
       splineApp.setVariable('heading', selectedSkill.label)
       splineApp.setVariable('desc', selectedSkill.shortDescription)
@@ -240,11 +274,12 @@ export function SkillsSection() {
 
     splineApp.addEventListener('keyDown', (e) => {
       if (!splineApp) return
-      const skill = SKILLS[e.target.name as keyof typeof SKILLS]
+      const resolvedName = resolveSkillKey(e.target.name)
+      const skill = SKILLS[resolvedName as keyof typeof SKILLS]
       if (skill) setSelectedSkill(skill)
       if (isPhone) {
-        splineApp.setVariable('heading', skill?.label || '')
-        splineApp.setVariable('desc', '')
+        splineApp.setVariable('heading', '')
+        splineApp.setVariable('desc', skill?.label || '')
       } else {
         splineApp.setVariable('heading', skill?.label || '')
         splineApp.setVariable('desc', skill?.shortDescription || '')
@@ -310,7 +345,13 @@ export function SkillsSection() {
         </p>
 
         <Spline
-          onLoad={(app) => setSplineApp(app as unknown as SplineApp)}
+          onLoad={(app) => {
+            setSplineApp(app as unknown as SplineApp)
+            if (!onReadyRef.current) {
+              onReadyRef.current = true
+              onReady?.()
+            }
+          }}
           scene="/assets/skills_keyboardss.spline"
         />
       </div>
