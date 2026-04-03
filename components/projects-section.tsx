@@ -24,6 +24,21 @@ interface ProjectsSectionProps {
   onReady?: () => void
 }
 
+function toAbsoluteProjectImageUrl(imagePath?: string): string | undefined {
+  if (!imagePath) return imagePath
+  if (/^https?:\/\//i.test(imagePath)) return imagePath
+
+  const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '')
+  if (!baseUrl) return imagePath
+
+  const encodedPath = imagePath
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
+  return `${baseUrl}/storage/v1/object/public/project-images/${encodedPath}`
+}
+
 export function ProjectsSection({ onReady }: ProjectsSectionProps) {
   const isMobile = useIsMobile()
   const [projects, setProjects] = useState<Project[]>([])
@@ -37,7 +52,12 @@ export function ProjectsSection({ onReady }: ProjectsSectionProps) {
         setIsLoading(true)
         const data = await fetchProjects()
         if (data) {
-          setProjects(data)
+          setProjects(
+            data.map((project) => ({
+              ...project,
+              image_storage_path: toAbsoluteProjectImageUrl(project.image_storage_path),
+            }))
+          )
           setError(null)
         } else {
           setError('Failed to load projects from Supabase')

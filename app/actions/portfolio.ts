@@ -12,6 +12,7 @@ const CACHE_TTL_MS = 5 * 60 * 1000
 
 const cacheState = {
   projects: null as CacheEntry<Project[] | null> | null,
+  projectImageNames: null as CacheEntry<Set<string> | null> | null,
   aboutInfo: null as CacheEntry<AboutInfo | null> | null,
   aboutImages: null as CacheEntry<string[]> | null,
   heroImage: null as CacheEntry<string | null> | null,
@@ -20,6 +21,7 @@ const cacheState = {
 
 const inFlight = {
   projects: null as Promise<Project[] | null> | null,
+  projectImageNames: null as Promise<Set<string> | null> | null,
   aboutInfo: null as Promise<AboutInfo | null> | null,
   aboutImages: null as Promise<string[]> | null,
   heroImage: null as Promise<string | null> | null,
@@ -70,6 +72,136 @@ async function retry<T>(fn: () => Promise<T>, attempts = 3, waitMs = 350): Promi
   throw lastError
 }
 
+async function fetchProjectImageNameSet(): Promise<Set<string> | null> {
+  const cached = getCachedValue(cacheState.projectImageNames)
+  if (cached !== null) return cached
+
+  if (inFlight.projectImageNames) return inFlight.projectImageNames
+
+  inFlight.projectImageNames = (async () => {
+    try {
+      const { data, error } = await retry(async () => {
+        return await supabase.storage
+          .from('project-images')
+          .list('', { limit: 200 })
+      })
+
+      if (error) {
+        if (!isNetworkLookupFailure(error)) {
+          console.error('Error listing project-images bucket:', error)
+        }
+        setCachedValue('projectImageNames', null)
+        return null
+      }
+
+      const fileNameSet = new Set(
+        (data || [])
+          .map((item) => item.name)
+          .filter(Boolean)
+          .map((name) => name.toLowerCase())
+      )
+
+      setCachedValue('projectImageNames', fileNameSet)
+      return fileNameSet
+    } catch (error) {
+      if (!isNetworkLookupFailure(error)) {
+        console.error('Error listing project-images bucket:', error)
+      }
+      return null
+    }
+  })().finally(() => {
+    inFlight.projectImageNames = null
+  })
+
+  return inFlight.projectImageNames
+}
+
+function buildSupabasePublicStorageUrl(
+  storagePath: string,
+  bucket: 'portfolio-images' | 'project-images'
+): string {
+  const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!baseUrl || !storagePath) return ''
+
+  const normalizedBase = baseUrl.replace(/\/$/, '')
+  const encodedPath = storagePath
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
+  return `${normalizedBase}/storage/v1/object/public/${bucket}/${encodedPath}`
+}
+
+async function resolveProjectImageUrl(
+  imageStoragePath: string | undefined,
+  projectOrder: number,
+  fallbackIndex: number,
+  availableImageNames: Set<string> | null
+): Promise<string> {
+  const candidatePaths: string[] = []
+
+  if (imageStoragePath) {
+    if (/^https?:\/\//i.test(imageStoragePath)) {
+      candidatePaths.push(imageStoragePath)
+    } else {
+      const normalizedProvidedPath = imageStoragePath.toLowerCase()
+      const isOrderedProjectName = /^project\d+\.(png|jpe?g)$/i.test(normalizedProvidedPath)
+      const existsInBucket = !!availableImageNames?.has(normalizedProvidedPath)
+
+      // Ignore stale legacy names (e.g. zk-strkfi.png) and prioritize order-based naming.
+      if (isOrderedProjectName || existsInBucket) {
+        candidatePaths.push(imageStoragePath)
+      }
+    }
+  }
+
+  const normalizedOrder = Number.isFinite(projectOrder) && projectOrder > 0
+    ? Math.floor(projectOrder)
+    : fallbackIndex + 1
+
+  const orderedBaseName = `project${normalizedOrder}`
+  candidatePaths.push(
+    `${orderedBaseName}.png`,
+    `${orderedBaseName}.jpg`,
+    `${orderedBaseName}.jpeg`
+  )
+
+  for (const path of candidatePaths) {
+    // For auto-generated names, only accept files that actually exist in the bucket.
+    if (
+      availableImageNames &&
+      !/^https?:\/\//i.test(path) &&
+      !availableImageNames.has(path.toLowerCase())
+    ) {
+      continue
+    }
+
+    if (isHttpUrl(path)) return path
+
+    const directPublicUrl = buildSupabasePublicStorageUrl(path, 'project-images')
+    if (isHttpUrl(directPublicUrl)) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`  ✓ Direct URL: ${directPublicUrl}`)
+      }
+      return directPublicUrl
+    }
+
+    let imageUrl = await getSignedImageUrl(path, 'project-images')
+    if (!isHttpUrl(imageUrl)) {
+      imageUrl = await getPublicImageUrl(path, 'project-images')
+    }
+
+    if (isHttpUrl(imageUrl)) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`  ✓ Resolved URL: ${imageUrl}`)
+      }
+      return imageUrl
+    }
+  }
+
+  return ''
+}
+
 // Fetch all projects from Supabase
 export async function fetchProjects(): Promise<Project[] | null> {
   const cached = getCachedValue(cacheState.projects)
@@ -95,16 +227,23 @@ export async function fetchProjects(): Promise<Project[] | null> {
 
     if (!data) return []
 
+    const availableImageNames = await fetchProjectImageNameSet()
+
     const projectsWithImageUrls = await Promise.all(
-      (data as Project[]).map(async (project) => {
-        if (!project.image_storage_path) return project
-        if (isHttpUrl(project.image_storage_path)) return project
+      (data as Project[]).map(async (project, index) => {
+        const imageUrl = await resolveProjectImageUrl(
+          project.image_storage_path,
+          project.order,
+          index,
+          availableImageNames
+        )
 
-        // project-images bucket is private, so resolve a signed URL for frontend rendering.
-        let imageUrl = await getSignedImageUrl(project.image_storage_path, 'project-images')
-
-        if (!isHttpUrl(imageUrl)) {
-          imageUrl = await getPublicImageUrl(project.image_storage_path, 'project-images')
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`📸 [Project ${project.order}] ${project.title}:`, {
+            original: project.image_storage_path,
+            resolved: imageUrl,
+            hasHttpUrl: imageUrl ? /^https?:\/\//i.test(imageUrl) : false,
+          })
         }
 
         if (!isHttpUrl(imageUrl)) return project
