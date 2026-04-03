@@ -89,32 +89,37 @@ export function SimpleNavigation() {
 
       <nav className="fixed top-0 left-0 right-0 z-50 px-5 sm:px-8 lg:px-12 py-5 sm:py-8">
         <div className="relative max-w-[1800px] mx-auto rounded-full border border-white/10 bg-black/40 px-5 sm:px-8 py-3 sm:py-4 backdrop-blur-xl">
-          <div className="flex items-center justify-between w-full">
-            <div className="hidden sm:flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary" />
-              <span className="kicker-font text-white-300/85 text-xs whitespace-nowrap">Chennai, India</span>
+          <div className="flex items-center justify-between w-full gap-4">
+            {/* Left section - Brand (YR) on mobile, dot + location on desktop */}
+            <div className="flex-1 flex items-center gap-3">
+              <a
+                href=""
+                className="flex items-center gap-3 whitespace-nowrap"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-lg sm:text-xl">YR</span>
+                </div>
+                <span className="text-white text-base sm:text-xl font-semibold hidden sm:inline">𝚈𝚞𝚟𝚊𝚗 𝚛𝚊𝚓</span>
+              </a>
+              
+              {/* Dot + Location (Hidden on mobile) */}
+              <div className="hidden sm:flex items-center gap-2 ml-auto">
+                <span className="w-2 h-2 rounded-full bg-primary" />
+                <span className="kicker-font text-white-300/85 text-xs whitespace-nowrap">Chennai, India</span>
+              </div>
             </div>
 
+            {/* Right section - Menu button */}
             <button
               type="button"
-              className="w-11 h-11 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition"
+              className="w-11 h-11 rounded-full bg-white flex items-center justify-center hover:bg-gray-100 transition flex-shrink-0"
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setIsOpen((prev) => !prev)}
             >
               {isOpen ? <X size={20} className="text-black" /> : <Menu size={20} className="text-black" />}
             </button>
           </div>
-
-          <a
-            href=""
-            className="absolute left-5 sm:left-1/2 top-1/2 -translate-y-1/2 sm:-translate-x-1/2 flex items-center gap-3"
-            onClick={() => setIsOpen(false)}
-          >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg sm:text-xl">YR</span>
-            </div>
-            <span className="text-white text-base sm:text-xl font-semibold hidden sm:inline">𝚈𝚞𝚟𝚊𝚗 𝚛𝚊𝚓</span>
-          </a>
         </div>
 
         <AnimatePresence>
