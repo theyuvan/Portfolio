@@ -31,15 +31,15 @@ A production-ready portfolio built with **Next.js 16** featuring:
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
-|----------|---------------|
-| **Frontend** | Next.js 16, React 19, TypeScript 5.7 |
-| **Styling** | Tailwind CSS 4.2, CSS-in-JS (Framer Motion) |
-| **Animation** | Framer Motion, GSAP, Lenis |
-| **3D Graphics** | Spline, Three.js, React Three Fiber, @react-three/drei |
-| **Backend** | Supabase (PostgreSQL, Storage, Edge Functions) |
-| **Email** | Nodemailer (Gmail SMTP) |
-| **Deployment** | Vercel (recommended), Netlify, AWS Amplify |
+| Category        | Technologies                                          |
+|-----------------|-------------------------------------------------------|
+| **Frontend**    | Next.js 16, React 19, TypeScript 5.7                  |
+| **Styling**     | Tailwind CSS 4.2, CSS-in-JS (Framer Motion)           |
+| **Animation**   | Framer Motion, GSAP, Lenis                            |
+| **3D Graphics** | Spline, Three.js, React Three Fiber, @react-three/drei|
+| **Backend**     | Supabase (PostgreSQL, Storage, Edge Functions)        |
+| **Email**       | Nodemailer (Gmail SMTP)                               |
+| **Deployment**  | Vercel (recommended), Netlify, AWS Amplify            |
 
 ## 📁 Project Structure
 
