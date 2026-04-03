@@ -1,7 +1,22 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url))
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
+  },
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'localhost:3000',
+        '127.0.0.1:3000',
+        '*.inc1.devtunnels.ms',
+        'zxqqm13g-3000.inc1.devtunnels.ms',
+      ],
+    },
   },
   images: {
     unoptimized: true,
@@ -13,8 +28,10 @@ const nextConfig = {
       },
     ],
   },
-  // Empty turbopack config to acknowledge Turbopack usage
-  turbopack: {},
+  // Keep Turbopack scoped to this project (avoids parent-folder lockfile root inference)
+  turbopack: {
+    root: projectRoot,
+  },
   webpack: (config, { isServer }) => {
     config.optimization.usedExports = true
     config.optimization.sideEffects = false
