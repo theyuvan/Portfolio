@@ -62,12 +62,16 @@ export function ContactSection({ onReady }: ContactSectionProps) {
         formData.message
       )
 
-      if (result.success) {
+      if (result.success && !result.error) {
         setSubmitStatus('success')
         setSubmitMessage("Thank you for your message. I'll get back to you soon.")
         setFormData({ name: '', email: '', message: '' })
-        // Reset success message after 5 seconds
         setTimeout(() => setSubmitStatus('idle'), 5000)
+      } else if (result.success && result.error) {
+        // Saved to DB but email failed
+        setSubmitStatus('error')
+        setSubmitMessage('Your message was saved but the email notification failed. Please try again later or reach me directly.')
+        setFormData({ name: '', email: '', message: '' })
       } else {
         setSubmitStatus('error')
         setSubmitMessage(result.error || 'Failed to send message. Please try again.')
