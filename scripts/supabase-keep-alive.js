@@ -22,6 +22,9 @@ async function keepAlive() {
   try {
     const response = await fetch(endpoint, {
       method: "GET",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+      },
       signal: controller.signal,
     });
 
