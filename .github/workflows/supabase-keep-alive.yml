@@ -2,8 +2,8 @@ name: Supabase Keep-Alive
 
 on:
   schedule:
-    # Runs every 3 days at 08:00 UTC (well within Supabase's 7-day inactivity window)
-    - cron: "0 8 */3 * *"
+    # Runs every 2 days at 08:00 UTC — safer buffer before Supabase's 7-day pause
+    - cron: "0 8 */2 * *"
   workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20" # Ensures native fetch is available
+          node-version: "24"
 
       - name: Run keep-alive script
         env:
