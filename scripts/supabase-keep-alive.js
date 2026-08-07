@@ -11,8 +11,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 async function keepAlive() {
-  // Use the health endpoint — always reachable, no table/RLS dependency
-  const endpoint = `${SUPABASE_URL}/rest/v1/`;
+  // Auth health endpoint — public, no auth required, always reachable
+  const endpoint = `${SUPABASE_URL}/auth/v1/health`;
 
   console.log(`[${new Date().toISOString()}] Pinging Supabase at: ${SUPABASE_URL}`);
 
@@ -22,18 +22,13 @@ async function keepAlive() {
   try {
     const response = await fetch(endpoint, {
       method: "GET",
-      headers: {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
       signal: controller.signal,
     });
 
     clearTimeout(timeout);
     console.log(`[${new Date().toISOString()}] HTTP Status: ${response.status} ${response.statusText}`);
 
-    if (response.ok || response.status === 400) {
-      // 400 is fine — it means Supabase responded (project is alive)
+    if (response.ok) {
       console.log(`[${new Date().toISOString()}] Success — Supabase is online. Inactivity timer reset.`);
     } else {
       const body = await response.text();
