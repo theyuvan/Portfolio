@@ -2,26 +2,61 @@ name: Supabase Keep-Alive
 
 on:
   schedule:
-    # Runs every 2 days at 08:00 UTC — safer buffer before Supabase's 7-day pause
-    - cron: "0 8 */2 * *"
-  workflow_dispatch: # Allows manual trigger from the GitHub Actions UI
+    # Four database reads per day, away from the busy start of the hour (UTC).
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/supabase-keep-alive.yml
+      - scripts/supabase-keep-alive.js
+      - scripts/supabase-keep-alive.test.js
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-keep-alive
+  cancel-in-progress: false
 
 jobs:
   ping:
-    name: Ping Supabase REST API
+    name: Query portfolio database and recover if paused
     runs-on: ubuntu-latest
-
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
+          package-manager-cache: false
+
+      - name: Test keep-alive behavior
+        run: node --test scripts/supabase-keep-alive.test.js
 
       - name: Run keep-alive script
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          # Optional personal access token, used only if the database is unreachable.
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         run: node scripts/supabase-keep-alive.js
+
+  renew-schedule:
+    name: Renew scheduled workflow
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    steps:
+      # Runs independently even when the database job fails. The enable-API
+      # workaround helps avoid GitHub's 60-day repository-inactivity cutoff.
+      - name: Re-enable this workflow through GitHub API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/supabase-keep-alive.yml/enable"

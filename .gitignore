@@ -19,6 +19,7 @@ node_modules/
 3D-Portfolio/
 3D-Portfolio-website/
 
-# Ignore markdown files except README
+# Ignore markdown files except README and keep-alive setup
 *.md
 !README.md
+!docs/supabase-keep-alive.md

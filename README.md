@@ -123,6 +123,9 @@ A production-ready portfolio built with **Next.js 16** featuring:
 
 ### Tables Required
 
+For the scheduled database check and optional automatic resume, see
+[Supabase keep-alive setup](docs/supabase-keep-alive.md).
+
 1. **`projects`** - Your portfolio projects
    ```sql
    id, title, description, technologies, github_url, live_url, 
